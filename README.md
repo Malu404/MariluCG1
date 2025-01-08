@@ -1,5 +1,6 @@
 # Port experimental em C++
-Fiz esse port em C++ pra comparar com Rust.\
+Código em C++ que roda em windows e em linux
+Falta cone e ajeitar a sombra do cilindro
 Como rodar (Linux):
 ```
 make clean run
