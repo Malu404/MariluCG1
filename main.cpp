@@ -1,3 +1,4 @@
+#define SDL_MAIN_HANDLED
 #include <iostream>
 #include <cmath>
 #include <chrono>
@@ -28,7 +29,7 @@ int main() {
     double sphere_radius = 4.0;
     double cilinder_radius = std::trunc(sphere_radius / 3.0); // Corrigido
     double cilinder_height = sphere_radius *3.0;
-    Vec3 sphere_center = Vec3(0, 0, -100.0);
+    Vec3 sphere_center = Vec3(0, 0, -13.0);
     Vec3 cilinder_center = Vec3(0.0, -5.0, -12.0);
     Vec3 plane_p0 = Vec3(0.0, -5.0, 0.0);//plano verde
     Vec3 plane_normal = Vec3(0.0, 1.0, 0.0);
@@ -46,7 +47,7 @@ int main() {
     Material mat_cilinder = Material(
         Vec3(0.2, 0.3, 0.8), //ambiente
         Vec3(0.2, 0.3, 0.8), //difuso
-        Vec3(0.2, 0.3, 0.8),,// especular
+        Vec3(0.2, 0.3, 0.8),// especular
         10
     );
     Material mat_p1 = Material(

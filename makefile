@@ -9,7 +9,7 @@ CXXFLAGS = -O2 -march=native `sdl2-config --cflags`
 # CXXFLAGS = -Ofast -march=native -flto -ftree-vectorize -finline-functions -g0 -ffunction-sections -fdata-sections -funroll-loops -ffast-math -Wl,--gc-sections -fno-strict-aliasing -funsafe-math-optimizations `sdl2-config --cflags`
 
 # Linker flags
-LDFLAGS = `sdl2-config --libs`
+LDFLAGS = `sdl2-config --libs` 
 
 # Source files
 SRCS = main.cpp
