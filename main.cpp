@@ -29,11 +29,15 @@ int main() {
     double sphere_radius = 4.0;
     double cilinder_radius = std::trunc(sphere_radius / 3.0); // Corrigido
     double cilinder_height = sphere_radius *3.0;
-    Vec3 sphere_center = Vec3(0, 0, -13.0);
-    Vec3 cilinder_center = Vec3(0.0, -5.0, -12.0);
+    double cone_radius = std::trunc(sphere_radius *1.5); // Corrigido
+    double cone_height = std::trunc(cone_radius/3);
+    Vec3 sphere_center = Vec3(-10, 0, -13.0);//esfera centro posição
+    Vec3 d_cil = Vec3(-1/sqrt(3), 1/sqrt(3), -1/sqrt(3));
+    Vec3 cilinder_center = Vec3(0.0, -5.0, -12.0);//cilindro centro posição
+    //cone centro posição
+    Vec3 cone_center = Vec3(10.0, 0, -11.0);
     Vec3 plane_p0 = Vec3(0.0, -5.0, 0.0);//plano verde
     Vec3 plane_normal = Vec3(0.0, 1.0, 0.0);
-
     Vec3 plane2_p0 = Vec3(0.0, 0.0, -20.0);//plano azul
     Vec3 plane2_normal = Vec3(0.0, 0.0, 1.0);
     
@@ -42,13 +46,19 @@ int main() {
         Vec3(0.7, 0.2, 0.2),
         Vec3(0.7, 0.2, 0.2),
         Vec3(0.7, 0.2, 0.2),
-        10
+        1
     );
     Material mat_cilinder = Material(
         Vec3(0.2, 0.3, 0.8), //ambiente
         Vec3(0.2, 0.3, 0.8), //difuso
         Vec3(0.2, 0.3, 0.8),// especular
-        10
+        1
+    );
+    Material mat_cone = Material(
+        Vec3( 0.8, 0.3, 0.2),
+        Vec3( 0.8, 0.3, 0.2),
+        Vec3(0.8, 0.3, 0.2),
+        3
     );
     Material mat_p1 = Material(
         Vec3(0.2, 0.7, 0.2),
@@ -66,7 +76,8 @@ int main() {
     Sphere* sphere = new Sphere(sphere_center, sphere_radius, mat_sphere);
     Plane* plane = new Plane(plane_p0, plane_normal, mat_p1);
     Plane* plane2 = new Plane(plane2_p0, plane2_normal, mat_p2);
-    Cilinder* cilinder = new Cilinder(cilinder_center, cilinder_radius,cilinder_height, mat_cilinder);
+    Cilinder* cilinder = new Cilinder(cilinder_center,d_cil, cilinder_radius,cilinder_height, mat_cilinder);
+    Cone* cone = new Cone(cone_center, d_cil, cone_radius, cone_height, mat_cone);
     //fontes de luz de cores diferentes, o primeiro vetor é posição o segundo é cor da luz
     Light light1 = Light(
         Vec3(-0.8, 0.8, 0.0),
@@ -76,7 +87,7 @@ int main() {
     Light light2 = Light(
         Vec3(0.8, 0.8, 0.0),//posição da luz
         Vec3(1.0, 1.0, 1.0),//cor da luz
-        10.0//intensidade da luz
+        0.7//intensidade da luz
     );
     //aqui é a luz ambiente, vulto luz do além.
     Vec3 ambient_light = Vec3(0.3, 0.3, 0.3);
@@ -88,6 +99,7 @@ int main() {
     scene.add_object(plane);
     scene.add_object(plane2);
     scene.add_object(cilinder);
+    scene.add_object(cone);
     scene.add_light(light1);
     scene.add_light(light2);
     
