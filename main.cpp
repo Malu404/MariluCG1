@@ -27,7 +27,7 @@ int main() {
 
     double sphere_radius = 4.0;
     double cilinder_radius = std::trunc(sphere_radius / 3.0); // Corrigido
-    double cilinder_height = 10.0;
+    double cilinder_height = sphere_radius *3.0;
     Vec3 sphere_center = Vec3(0, 0, -100.0);
     Vec3 cilinder_center = Vec3(0.0, -5.0, -12.0);
     Vec3 plane_p0 = Vec3(0.0, -5.0, 0.0);//plano verde
@@ -44,9 +44,9 @@ int main() {
         10
     );
     Material mat_cilinder = Material(
-        Vec3(0.7, 0.2, 0.2), //ambiente
-        Vec3(0.7, 0.2, 0.2), //difuso
-        Vec3(0.7, 0.2, 0.2),// especular
+        Vec3(0.2, 0.3, 0.8), //ambiente
+        Vec3(0.2, 0.3, 0.8), //difuso
+        Vec3(0.2, 0.3, 0.8),,// especular
         10
     );
     Material mat_p1 = Material(
@@ -73,9 +73,9 @@ int main() {
         0.7
     );
     Light light2 = Light(
-        Vec3(0.8, 0.8, 0.0),
-        Vec3(1.0, 1.0, 1.0),
-        0.7
+        Vec3(0.8, 0.8, 0.0),//posição da luz
+        Vec3(1.0, 1.0, 1.0),//cor da luz
+        10.0//intensidade da luz
     );
     //aqui é a luz ambiente, vulto luz do além.
     Vec3 ambient_light = Vec3(0.3, 0.3, 0.3);
