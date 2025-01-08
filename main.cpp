@@ -35,10 +35,10 @@ int main() {
     Vec3 d_cil = Vec3(-1/sqrt(3), 1/sqrt(3), -1/sqrt(3));
     Vec3 cilinder_center = Vec3(0.0, -5.0, -12.0);//cilindro centro posição
     //cone centro posição
-    Vec3 cone_center = Vec3(10.0, 0, -11.0);
+    Vec3 cone_center = cilinder_center + d_cil * cilinder_height; 
     Vec3 plane_p0 = Vec3(0.0, -5.0, 0.0);//plano verde
     Vec3 plane_normal = Vec3(0.0, 1.0, 0.0);
-    Vec3 plane2_p0 = Vec3(0.0, 0.0, -20.0);//plano azul
+    Vec3 plane2_p0 = Vec3(0.0, 0.0, -30.0);//plano azul
     Vec3 plane2_normal = Vec3(0.0, 0.0, 1.0);
     
     Vec3 bg_color = Vec3(0.0, 0.0, 0.0);
@@ -90,7 +90,7 @@ int main() {
         0.7//intensidade da luz
     );
     //aqui é a luz ambiente, vulto luz do além.
-    Vec3 ambient_light = Vec3(0.3, 0.3, 0.3);
+    Vec3 ambient_light = Vec3(0.7, 0.7, 0.7);
     
     Camera camera = Camera(p0, viewport_width, viewport_height, image_width, image_height, viewport_distance, bg_color);
 

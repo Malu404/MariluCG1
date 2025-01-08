@@ -25,7 +25,7 @@ class Cone : public Shape {
             double sin_theta = radius / sqrt(height * height + radius * radius);
             double a = r.dr.dot(r.dr) - pow(r.dr.dot(direction), 2) - pow(cos_theta, 2) * (r.dr.dot(direction) * r.dr.dot(direction) - r.dr.dot(r.dr));
             double b = 2.0 * (r.dr.dot(v) - (r.dr.dot(direction) * v.dot(direction)) - pow(cos_theta, 2) * (r.dr.dot(direction) * v.dot(direction) - r.dr.dot(v)));
-            double c = v.dot(v) - pow(v.dot(direction), 2) - pow(cos_theta, 2) * (v.dot(direction) * v.dot(direction) - v.dot(v));
+            double c = v.dot(v) - pow(v.dot(direction), 2) - pow(cos_theta, 2) * (v.dot(direction) * v.dot(v) - v.dot(v));
             double delta = b * b - 4 * a * c;
 
             if (delta > 0.0) {
