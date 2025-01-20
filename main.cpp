@@ -33,8 +33,8 @@ int main() {
     Vec3 sphere_center = Vec3(-10, 0, -13.0);//esfera centro posição
     Vec3 d_cil = Vec3(-1/sqrt(3), 1/sqrt(3), -1/sqrt(3));
     Vec3 cilinder_center = Vec3(0.0, -5.0, -12.0);//cilindro centro posição
-    Vec3 cone_base_center = Vec3(0.0, -cone_height / 2.0, -10.0); // Set the cone base center position
-    Vec3 cone_top_vertex = Vec3(0.0, cone_height / 2.0, -10.0); // Set the cone top vertex position
+    Vec3 cone_base_center = Vec3(0.0, -cone_height / 2.0, -20.0); // Set the cone base center position
+    Vec3 cone_top_vertex = Vec3(0.0, cone_height / 2.0, -20.0); // Set the cone top vertex position
     Vec3 plane_p0 = Vec3(0.0, -5.0, 0.0); // Green plane
     Vec3 plane_normal = Vec3(0.0, 1.0, 0.0);
     Vec3 plane2_p0 = Vec3(0.0, 0.0, -30.0); // Blue plane
@@ -94,8 +94,8 @@ int main() {
     Camera camera = Camera(p0, viewport_width, viewport_height, image_width, image_height, viewport_distance, bg_color);
 
     Scene scene = Scene(ambient_light);
-     scene.add_object(sphere);
-      scene.add_object(cilinder);
+    //scene.add_object(sphere);
+    //scene.add_object(cilinder);
     scene.add_object(plane);
     scene.add_object(plane2);
     scene.add_object(cone);
