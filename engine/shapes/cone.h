@@ -54,7 +54,7 @@ public:
 
         // Helper function to check if t value hits the cone
         auto is_valid_cone_hit = [&](double t) {
-            if (t <= 0.0) return false;
+            if (t <= 0.001) return false;
             Vec3 intersection_to_apex = (ray_origin + t * ray_direction) - top_vertex;
             double height_at_t = intersection_to_apex.dot(axis_direction);
             return height_at_t >= 0.0 && height_at_t <= height;
