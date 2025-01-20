@@ -16,12 +16,12 @@ class Cilinder : public Shape {
         inline Vec3 get_normal(Vec3 p) override { 
             Vec3 top_center = center + direction * height;
             if (std::abs((p - center).dot(direction)) < 1e-6) {
-                return -direction; // Bottom circle
+                return -direction; // circulo base
             } else if (std::abs((p - top_center).dot(direction)) < 1e-6) {
-                return direction; // Top circle
+                return direction; // circulo topo
             } else {
                 Vec3 projection = center + direction * ((p - center).dot(direction));
-                return (p - projection).normalize(); // Side surface
+                return (p - projection).normalize(); // casca do cilindro
             }
         }
         
@@ -29,7 +29,7 @@ class Cilinder : public Shape {
             Vec3 top_center = center + direction * height;
             double t_min = INFINITY;
 
-            // Check intersection with the cylindrical surface
+            //confere interseção com o cilindro
             Vec3 oc = r.origin - center;
             Vec3 d = r.dr - direction * (r.dr.dot(direction));
             Vec3 oc_proj = oc - direction * (oc.dot(direction));
@@ -51,14 +51,14 @@ class Cilinder : public Shape {
                 }
             }
 
-            // Check intersection with the bottom circle
+            // verifica interseção com o circulo base
             double t_bottom = (center - r.origin).dot(direction) / r.dr.dot(direction);
             Vec3 p_bottom = r.at(t_bottom);
             if (t_bottom > 0 && (p_bottom - center).magnitude() <= radius) {
                 t_min = std::min(t_min, t_bottom);
             }
 
-            // Check intersection with the top circle
+            // verifica interseção com o circulo topo
             double t_top = (top_center - r.origin).dot(direction) / r.dr.dot(direction);
             Vec3 p_top = r.at(t_top);
             if (t_top > 0 && (p_top - top_center).magnitude() <= radius) {

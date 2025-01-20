@@ -31,28 +31,28 @@ public:
     double intersects(Ray r) override {
         Vec3 ray_origin = r.origin;
         Vec3 ray_direction = r.dr;
-        Vec3 cone_to_origin = ray_origin - top_vertex; // Vector from cone apex to ray origin
+        Vec3 cone_to_origin = ray_origin - top_vertex; // vetor topo do cone para origem
 
-        // Precompute reusable dot products
+        // Calculando as operações vetoriais
         double axis_dot_direction = ray_direction.dot(axis_direction);
         double axis_dot_cone_to_origin = cone_to_origin.dot(axis_direction);
         double direction_dot_cone_to_origin = ray_direction.dot(cone_to_origin);
         double cone_to_origin_dot_cone_to_origin = cone_to_origin.dot(cone_to_origin);
 
-        // Calculate quadratic coefficients
+        // Calculando os coeficientes da equação quadrática
         double a = axis_dot_direction * axis_dot_direction - cos_angle_sq;
         double b = 2.0 * (axis_dot_direction * axis_dot_cone_to_origin - direction_dot_cone_to_origin * cos_angle_sq);
         double c = axis_dot_cone_to_origin * axis_dot_cone_to_origin - cone_to_origin_dot_cone_to_origin * cos_angle_sq;
 
-        // Compute the discriminant
+        // Calculando o discriminante
         double discriminant = b * b - 4.0 * a * c;
-        if (discriminant < 0.0) return -INFINITY; // No real solutions, no intersection
+        if (discriminant < 0.0) return -INFINITY; // sem soluçao real é sem interseção
 
         double sqrt_discriminant = std::sqrt(discriminant);
         double t1 = (-b - sqrt_discriminant) / (2.0 * a);
         double t2 = (-b + sqrt_discriminant) / (2.0 * a);
 
-        // Helper function to check if t value hits the cone
+        // Confere se a interseção é válida
         auto is_valid_cone_hit = [&](double t) {
             if (t <= 0.001) return false;
             Vec3 intersection_to_apex = (ray_origin + t * ray_direction) - top_vertex;
@@ -64,7 +64,7 @@ public:
         double t = 0.0;
         Vec3 surface_normal;
 
-        // Check intersections with the cone surface
+        // Confere interseções com a superficie do cone
         if (is_valid_cone_hit(t1)) {
             hit_detected = true;
             t = t1;
@@ -80,7 +80,7 @@ public:
             surface_normal = (intersection_to_apex - axis_direction * height_at_intersection).normalize();
         }
 
-        // Check intersection with the base if necessary
+        // Se necessario, confere interseção com a base do cone
         if (capped && (!hit_detected || t <= 0.0)) {
             double denominator = ray_direction.dot(axis_direction);
             if (std::fabs(denominator) > 1e-8) {
@@ -106,11 +106,11 @@ private:
     double cos_angle_sq;
 
     void update_constants() {
-        Vec3 axis = base_center - top_vertex; // Define the axis as top_vertex - base_center
-        height = axis.magnitude();            // Calculate the height as the distance between base and vertex
-        axis_direction = axis.normalize();    // Direction of the axis (unit vector)
-        cos_angle = height / std::sqrt(height * height + radius * radius); // Calculate the angle
-        cos_angle_sq = cos_angle * cos_angle; // Precompute the cosine squared
+        Vec3 axis = base_center - top_vertex; // Define axis como top_vertex - base_center
+        height = axis.magnitude();            // Calcula altura como distância entre base e vertex
+        axis_direction = axis.normalize();    // Direção do axis(vetor unitário)
+        cos_angle = height / std::sqrt(height * height + radius * radius); // Calcula o angulo
+        cos_angle_sq = cos_angle * cos_angle; // Deixa calculado o cos^2 do angulo
     }
 };
 
