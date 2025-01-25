@@ -6,23 +6,28 @@
 #include "ray.h"
 #include "light.h"
 #include "shapes/shape.h"
-
+//mudar de camera pra canvas
+//mudar de viewport pra janela
 class Camera {
     public:
         Vec3 pos, bg_color;
         Camera () : pos(Vec3()), bg_color(Vec3(1.0, 1.0, 1.0)), viewport(Viewport()) {}
-        Camera (Vec3 pos, double width, double height, double cols, double rows, double viewport_distance, Vec3 bg_color) :
-            pos(pos), bg_color(bg_color), viewport(Viewport(Vec3(pos.x, pos.y, pos.z - viewport_distance), width, height, cols, rows)) {}
+        Camera (Vec3 pos, double x_min, double y_min, double x_max, double y_max, double d1, double cols1, double rows1, Vec3 bg_color) :
+            pos(pos), bg_color(bg_color), viewport(Viewport(x_min, y_min, x_max, y_max, d1, cols1, rows1)) {}
 
         void draw_scene(SDL_Renderer* renderer, Scene scene) {
             SDL_SetRenderDrawColor(renderer, bg_color.x, bg_color.y, bg_color.z, 1.0);
             SDL_RenderClear(renderer);
             Light light = scene.lights.front(); // pegando só a primeira luz por enquanto...              
-
+            Vec3 dr;
+            dr.z = viewport.d;
             for (int row = 0; row < viewport.rows; row++) { // cada linha
+                dr.y = viewport.Y_max - viewport.dy/2 - viewport.dy * row;
                 for (int col = 0; col < viewport.cols; col++ ) { // cada coluna
                     // vetor direção pro quadrado do frame
-                    Vec3 dr = ((viewport.p00 + viewport.dx * col - viewport.dy * row) - pos).normalize();
+                    dr.x = viewport.X_min + viewport.dx/2 + viewport.dx * col;
+                    dr.normalize();
+                    
                     Ray r = Ray(pos, dr); // nosso raio
 
                     // pega o objeto mais próximo na cena
@@ -66,7 +71,7 @@ class Camera {
                             Vec3 idif = closest_shape->mat.k_diffuse * nl * light.color;
                             Vec3 iesp = closest_shape->mat.k_specular * pow(rv, closest_shape->mat.e) * light.color;
 
-                            ieye = ieye + iamb + idif + iesp;
+                            ieye = iamb + idif + iesp;
                         }
 
                         draw_pixel(renderer, col, row, ieye.clamp(0.0, 1.0).rgb_255());
@@ -83,36 +88,38 @@ class Camera {
             SDL_RenderDrawPoint(renderer, x, y);
         }
 
-        class Viewport {
+        class Viewport {//trocar nome para janela
         public:
-            Vec3 pos, dx, dy, top_left, p00;
-            double width, height;
+            double width, height, dx, dy, X_min, Y_min, X_max, Y_max, d;
             int cols, rows;
             
             Viewport () {
                 Vec3 pos = Vec3(0.0, 0.0, -1.0);
-                double width = 1.0; double height = 1.0;
-                double cols = 256; double rows = 256;
+                X_min = -1.0; 
+                Y_min = -1.0; 
+                X_max = 1.0; 
+                Y_max = 1.0; //default
 
-                Vec3 dx = Vec3(width/cols, 0.0, 0.0);
-                Vec3 dy = Vec3(0.0, height/cols, 0.0);
-                Vec3 top_left = Vec3(pos.x - width/2.0, pos.y + height/2.0, pos.z);
-                Vec3 p00 = top_left + dx/2 - dy/2;
-
-                this->pos = pos; this->dx = dx; this->dy = dy; this->top_left = top_left; this->p00 = p00;
-                this->width = width; this->height = height;
-                this->cols = cols; this->rows = rows;
+                width = X_max - X_min; 
+                height = Y_max - Y_min;
+                cols = 100; rows = 100;
+                d = -1.0;
+                dx = width/cols;
+                dy = height/rows;
             }
 
-            Viewport (Vec3 pos, double width, double height, double cols, double rows) {
-                Vec3 dx = Vec3(width/cols, 0.0, 0.0);
-                Vec3 dy = Vec3(0.0, height/rows, 0.0);
-                Vec3 top_left = Vec3(pos.x - width/2.0, pos.y + height/2.0, pos.z);
-                Vec3 p00 = top_left + dx/2 - dy/2;
-
-                this->pos = pos; this->dx = dx; this->dy = dy; this->top_left = top_left; this->p00 = p00;
-                this->width = width; this->height = height;
-                this->cols = cols; this->rows = rows;      
+            Viewport (double x_min, double y_min, double x_max, double y_max, double d1, double cols1, double rows1) {
+                X_min = x_min; 
+                Y_min = y_min; 
+                X_max = x_max; 
+                Y_max = y_max; //default
+                d = d1;
+                width = X_max - X_min; 
+                height = Y_max - Y_min;
+                cols = cols1; 
+                rows = rows1;
+                dx = width/cols;
+                dy = height/rows;    
             }
         };
         Viewport viewport;

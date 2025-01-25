@@ -20,13 +20,13 @@ struct Vec3 {
 
     inline Vec3 operator-() const { return Vec3(-x, -y, -z); }
 
-    inline Vec3 operator*(const double other) const { return Vec3(x*other, y*other, z*other); }
+    inline Vec3 operator*(const double other) const { return Vec3(x*other, y*other, z*other); }//produto escalar por vetor
 
     inline friend Vec3 operator*(double scalar, const Vec3& other) { return Vec3(other.x*scalar, other.y*scalar, other.z*scalar); }
 
     inline Vec3 operator*(const Vec3& other) const { return Vec3(x*other.x, y*other.y, z*other.z); }
 
-    inline Vec3 operator/(const double other) const { return Vec3(x/other, y/other, z/other); }
+    inline Vec3 operator/(const double other) const { return Vec3(x/other, y/other, z/other); }//divisao por um numero
 
     inline friend Vec3 operator/(double scalar, const Vec3& other) { return Vec3(other.x/scalar, other.y/scalar, other.z/scalar); }
 
@@ -43,6 +43,7 @@ struct Vec3 {
     inline Vec3 rgb_normalized() const { return Vec3(x/255.0, y/255.0, z/255.0); }
 
     inline Vec3 rgb_255() const { return Vec3(x*255.0, y*255.0, z*255.0); }
+    
 
     inline Vec3 clamp(double min, double max) { return Vec3(clip(x, min, max), clip(y, min, max), clip(z, min, max)); }
 };
