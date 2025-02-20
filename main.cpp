@@ -6,7 +6,7 @@
 
 #include "utils/vec3.h"
 #include "engine/canvas.h"
-//#include "engine/canvas.h"
+//#include "engine/camera.h"
 #include "engine/light.h"
 #include "engine/scene.h"
 #include "engine/shapes/material.h"
@@ -62,13 +62,13 @@ int main() {
         Vec3(0.7, 0.2, 0.2),
         Vec3(0.7, 0.2, 0.2),
         Vec3(0.7, 0.2, 0.2),
-        100.0
+        1.0
     );
     Material mat_cilinder = Material(
         Vec3(0.2, 0.3, 0.8), //ambiente
         Vec3(0.2, 0.3, 0.8), //difuso
         Vec3(0.2, 0.3, 0.8),// especular
-        1
+        0.1
     );
     Material mat_cone = Material(
         Vec3(0.8, 0.3, 0.2), // Ambient
@@ -116,8 +116,8 @@ int main() {
 
     // Add lights
     Light light1 = Light(
-        Vec3(0.0, 0.0, -2.0),
-        Vec3(1.0, 1.0, 1.0),
+        Vec3(0.0, 0.0, 100.0),//POSIÇÃO DA LUZ
+        Vec3(1.0, 1.0, 1.0),//COR DA LUZ
         0.7
     );
     Light light2 = Light(
