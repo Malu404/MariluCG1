@@ -6,26 +6,26 @@
 #include "ray.h"
 #include "light.h"
 #include "shapes/shape.h"
-//mudar de camera pra canvas
-//mudar de viewport pra janela
-class Camera {
+//mudar de Canvas pra canvas
+//mudar de janela pra janela
+class Canvas {
     public:
         Vec3 pos, bg_color;
-        Camera () : pos(Vec3()), bg_color(Vec3(1.0, 1.0, 1.0)), viewport(Viewport()) {}
-        Camera (Vec3 pos, double x_min, double y_min, double x_max, double y_max, double d1, double cols1, double rows1, Vec3 bg_color) :
-            pos(pos), bg_color(bg_color), viewport(Viewport(x_min, y_min, x_max, y_max, d1, cols1, rows1)) {}
+        Canvas () : pos(Vec3()), bg_color(Vec3(1.0, 1.0, 1.0)), janela(janela()) {}
+        Canvas (Vec3 pos, double x_min, double y_min, double x_max, double y_max, double d1, double cols1, double rows1, Vec3 bg_color) :
+            pos(pos), bg_color(bg_color), janela(janela(x_min, y_min, x_max, y_max, d1, cols1, rows1)) {}
 
         void draw_scene(SDL_Renderer* renderer, Scene scene) {
             SDL_SetRenderDrawColor(renderer, bg_color.x, bg_color.y, bg_color.z, 1.0);
             SDL_RenderClear(renderer);
             Light light = scene.lights.front(); // pegando só a primeira luz por enquanto...              
             Vec3 dr;
-            dr.z = viewport.d;
-            for (int row = 0; row < viewport.rows; row++) { // cada linha
-                dr.y = viewport.Y_max - viewport.dy/2 - viewport.dy * row;
-                for (int col = 0; col < viewport.cols; col++ ) { // cada coluna
+            dr.z = janela.d;
+            for (int row = 0; row < janela.rows; row++) { // cada linha
+                dr.y = janela.Y_max - janela.dy/2 - janela.dy * row;
+                for (int col = 0; col < janela.cols; col++ ) { // cada coluna
                     // vetor direção pro quadrado do frame
-                    dr.x = viewport.X_min + viewport.dx/2 + viewport.dx * col;
+                    dr.x = janela.X_min + janela.dx/2 + janela.dx * col;
                     dr.normalize();
                     
                     Ray r = Ray(pos, dr); // nosso raio
@@ -88,12 +88,12 @@ class Camera {
             SDL_RenderDrawPoint(renderer, x, y);
         }
 
-        class Viewport {//trocar nome para janela
+        class janela {//trocar nome para janela
         public:
             double width, height, dx, dy, X_min, Y_min, X_max, Y_max, d;
             int cols, rows;
             
-            Viewport () {
+            janela () {
                 Vec3 pos = Vec3(0.0, 0.0, -1.0);
                 X_min = -1.0; 
                 Y_min = -1.0; 
@@ -108,7 +108,7 @@ class Camera {
                 dy = height/rows;
             }
 
-            Viewport (double x_min, double y_min, double x_max, double y_max, double d1, double cols1, double rows1) {
+            janela (double x_min, double y_min, double x_max, double y_max, double d1, double cols1, double rows1) {
                 X_min = x_min; 
                 Y_min = y_min; 
                 X_max = x_max; 
@@ -122,7 +122,7 @@ class Camera {
                 dy = height/rows;    
             }
         };
-        Viewport viewport;
+        janela janela;
 };
 
 #endif
