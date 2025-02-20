@@ -5,7 +5,8 @@
 #include <SDL.h>
 
 #include "utils/vec3.h"
-#include "engine/camera.h"
+#include "engine/canvas.h"
+//#include "engine/camera.h"
 #include "engine/light.h"
 #include "engine/scene.h"
 #include "engine/shapes/material.h"

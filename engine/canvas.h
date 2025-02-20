@@ -1,5 +1,5 @@
-#ifndef CAMERA_H
-#define CAMERA_H
+#ifndef CANVAS_H
+#define CANVAS_H
 
 #include <SDL_render.h>
 #include "scene.h"

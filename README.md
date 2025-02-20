@@ -6,5 +6,9 @@ Como rodar (Linux):
 make clean run
 ```
 
+Se for em windows:
+entre na pasta MariluCG1
+digite no powershell : .\run.bat
+
 
 
