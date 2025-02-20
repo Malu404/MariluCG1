@@ -6,7 +6,7 @@
 
 #include "utils/vec3.h"
 #include "engine/canvas.h"
-//#include "engine/camera.h"
+//#include "engine/canvas.h"
 #include "engine/light.h"
 #include "engine/scene.h"
 #include "engine/shapes/material.h"
@@ -127,7 +127,7 @@ int main() {
     );
     Vec3 ambient_light = Vec3(0.3, 0.3, 0.3);
     
-    Camera camera = Camera(p0, x_min, y_min, x_max, y_max, d1, cols1, rows1, bg_color);
+    Canvas canvas = Canvas(p0, x_min, y_min, x_max, y_max, d1, cols1, rows1, bg_color);
     
     Scene scene = Scene(ambient_light);
     scene.add_object(sphere);
@@ -159,7 +159,7 @@ int main() {
         }
 
         // Draw scene
-        camera.draw_scene(renderer, scene);
+        canvas.draw_scene(renderer, scene);
 
         // Print FPS to terminal
         frameCount++;

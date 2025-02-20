@@ -11,9 +11,9 @@
 class Canvas {
     public:
         Vec3 pos, bg_color;
-        Canvas () : pos(Vec3()), bg_color(Vec3(1.0, 1.0, 1.0)), janela(janela()) {}
+        Canvas () : pos(Vec3()), bg_color(Vec3(1.0, 1.0, 1.0)), janela(Janela()) {}
         Canvas (Vec3 pos, double x_min, double y_min, double x_max, double y_max, double d1, double cols1, double rows1, Vec3 bg_color) :
-            pos(pos), bg_color(bg_color), janela(janela(x_min, y_min, x_max, y_max, d1, cols1, rows1)) {}
+            pos(pos), bg_color(bg_color), janela(Janela(x_min, y_min, x_max, y_max, d1, cols1, rows1)) {}
 
         void draw_scene(SDL_Renderer* renderer, Scene scene) {
             SDL_SetRenderDrawColor(renderer, bg_color.x, bg_color.y, bg_color.z, 1.0);
@@ -88,12 +88,12 @@ class Canvas {
             SDL_RenderDrawPoint(renderer, x, y);
         }
 
-        class janela {//trocar nome para janela
+        class Janela {//trocar nome para janela
         public:
             double width, height, dx, dy, X_min, Y_min, X_max, Y_max, d;
             int cols, rows;
             
-            janela () {
+            Janela () {
                 Vec3 pos = Vec3(0.0, 0.0, -1.0);
                 X_min = -1.0; 
                 Y_min = -1.0; 
@@ -108,7 +108,7 @@ class Canvas {
                 dy = height/rows;
             }
 
-            janela (double x_min, double y_min, double x_max, double y_max, double d1, double cols1, double rows1) {
+            Janela (double x_min, double y_min, double x_max, double y_max, double d1, double cols1, double rows1) {
                 X_min = x_min; 
                 Y_min = y_min; 
                 X_max = x_max; 
@@ -122,7 +122,7 @@ class Canvas {
                 dy = height/rows;    
             }
         };
-        janela janela;
+        Janela janela;
 };
 
 #endif
