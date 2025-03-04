@@ -9,15 +9,15 @@ public:
     Vec3 v0, v1, v2;
     Vec3 normal;
 
-    Triangle(Vec3 v0, Vec3 v1, Vec3 v2, Material mat) : Shape(mat), v0(v0), v1(v1), v2(v2) {
+    Triangle( Vec3 v0, Vec3 v1, Vec3 v2, Material mat) : Shape(mat), v0(v0), v1(v1), v2(v2) {
         normal = (v1 - v0).cross(v2 - v0).normalize();
     }
 
-    inline Vec3 get_normal(Vec3 p) override {
+    inline Vec3 get_normal( Vec3 p) const override {
         return normal;
     }
 
-    double intersects(Ray r) override {
+    double intersects(Ray r) const override {
         // Implementação do algoritmo de interseção de triângulo
         Vec3 edge1 = v1 - v0;
         Vec3 edge2 = v2 - v0;
@@ -38,7 +38,7 @@ public:
         return t > 1e-8 ? t : -INFINITY; // Retorna t se a interseção é válida
     }
 
-    bool contains(Vec3 p) {
+    bool contains(Vec3 p) const {//tirei o const daqui de dentro do Vec3, nao sei se vai explodir o codigo 4/3/25 - 18:33
         // Verifica se o ponto p está dentro do triângulo
         Vec3 edge1 = v1 - v0;
         Vec3 edge2 = v2 - v0;

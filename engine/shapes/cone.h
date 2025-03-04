@@ -25,13 +25,13 @@ public:
         axis_direction = (top_vertex - base_center).normalize();
     }
 
-    inline Vec3 get_normal(Vec3 p) override {
+    inline Vec3 get_normal(Vec3 p) const override {
         Vec3 v = p - top_vertex;
         double m = sqrt(v.dot(v) - pow(v.dot(axis_direction), 2));
         return (v - axis_direction * m * (radius / height)).normalize();
     }
 
-    double intersects(Ray r) override {
+    double intersects(Ray r) const override {
         Vec3 ray_origin = r.origin;
         Vec3 ray_direction = r.dr;
         Vec3 cone_to_origin = ray_origin - top_vertex; // vetor topo do cone para origem do raio

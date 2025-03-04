@@ -14,6 +14,7 @@
 #include "engine/shapes/plane.h"
 #include "engine/shapes/cilinder.h"
 #include "engine/shapes/cone.h"
+#include "engine/shapes/malha.h"
 
 using namespace std;
 
@@ -56,6 +57,13 @@ int main() {
     //Vec3 plane_normal = Vec3(0.0, 1.0, 0.0);
     //Vec3 plane2_p0 = Vec3(0.0, 0.0, -30.0); // Blue plane
     //Vec3 plane2_normal = Vec3(0.0, 0.0, 1.0);
+    
+    Material mat_malha = Material(
+        Vec3(0.8, 0.2, 0.2),   // Cor ambiente (vermelho)
+        Vec3(0.8, 0.2, 0.2),   // Cor difusa
+        Vec3(0.5, 0.5, 0.5),   // Cor especular (brilho)
+        1.0                    // Coeficiente de brilho
+    );
     
     Vec3 bg_color = Vec3(0.0, 0.0, 0.0);
      Material mat_sphere = Material(
@@ -113,30 +121,32 @@ int main() {
     double cone_radius = 4.0; // Set the cone radius
     
     Cone* cone = new Cone(cone_base_center, cone_top_vertex, cone_radius, mat_cone);
-
+    Malha* malha = new Malha("C:/Users/PAZ/Desktop/MariluCG1/engine/shapes/cubo.obj", mat_malha);
     // Add lights
     Light light1 = Light(
         Vec3(0.0, 0.0, -2.0),
         Vec3(1.0, 1.0, 1.0),
-        0.7
+        0.3
     );
     Light light2 = Light(
         Vec3(0.8, 0.8, 0.0),
         Vec3(1.0, 1.0, 1.0),
-        0.7
+        0.3
     );
     Vec3 ambient_light = Vec3(0.3, 0.3, 0.3);
     
     Camera camera = Camera(p0, x_min, y_min, x_max, y_max, d1, cols1, rows1, bg_color);
     
     Scene scene = Scene(ambient_light);
-    scene.add_object(sphere);
+    //scene.add_object(sphere);
     //scene.add_object(cilinder);
     scene.add_object(plane);
     scene.add_object(plane2);
     //scene.add_object(cone);
+    scene.add_object(malha);
+
     scene.add_light(light1);
-    //scene.add_light(light2);
+    scene.add_light(light2);
     
     // SDL init
     if (SDL_Init(SDL_INIT_VIDEO) != 0) { printf("SDL_Init Error: %s\n", SDL_GetError()); return 1; }

@@ -13,7 +13,7 @@ class Cilinder : public Shape {
         Cilinder (): center(Vec3(0.0, 0.0, 0.0)), direction(Vec3(0.0, 1.0, 0.0)), radius(1.0), height(1.0), Shape() {}
         Cilinder (Vec3 center, Vec3 direction, double radius, double height, Material mat): center(center), direction(direction.normalize()), radius(radius), height(height), Shape(mat) {}
         
-        inline Vec3 get_normal(Vec3 p) override { 
+        inline Vec3 get_normal(Vec3 p) const override { 
             Vec3 top_center = center + direction * height;
             if (std::abs((p - center).dot(direction)) < 1e-6) {
                 return -direction; // circulo base
@@ -25,7 +25,7 @@ class Cilinder : public Shape {
             }
         }
         
-        double intersects(Ray r) override {
+        double intersects(Ray r) const override {
             Vec3 top_center = center + direction * height;
             double t_min = INFINITY;
 
