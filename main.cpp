@@ -70,13 +70,13 @@ int main() {
         Vec3(0.7, 0.2, 0.2),
         Vec3(0.7, 0.2, 0.2),
         Vec3(0.7, 0.2, 0.2),
-        100.0
+        1.0
     );
     Material mat_cilinder = Material(
         Vec3(0.2, 0.3, 0.8), //ambiente
         Vec3(0.2, 0.3, 0.8), //difuso
         Vec3(0.2, 0.3, 0.8),// especular
-        1
+        0.1
     );
     Material mat_cone = Material(
         Vec3(0.8, 0.3, 0.2), // Ambient
@@ -124,8 +124,8 @@ int main() {
     Malha* malha = new Malha("C:/Users/PAZ/Desktop/MariluCG1/engine/shapes/cubo.obj", mat_malha);
     // Add lights
     Light light1 = Light(
-        Vec3(0.0, 0.0, -2.0),
-        Vec3(1.0, 1.0, 1.0),
+        Vec3(0.0, 0.0, 100.0),//POSIÇÃO DA LUZ
+        Vec3(1.0, 1.0, 1.0),//COR DA LUZ
         0.3
     );
     Light light2 = Light(
@@ -135,7 +135,7 @@ int main() {
     );
     Vec3 ambient_light = Vec3(0.3, 0.3, 0.3);
     
-    Camera camera = Camera(p0, x_min, y_min, x_max, y_max, d1, cols1, rows1, bg_color);
+    Canvas canvas = Canvas(p0, x_min, y_min, x_max, y_max, d1, cols1, rows1, bg_color);
     
     Scene scene = Scene(ambient_light);
     //scene.add_object(sphere);
@@ -169,7 +169,7 @@ int main() {
         }
 
         // Draw scene
-        camera.draw_scene(renderer, scene);
+        canvas.draw_scene(renderer, scene);
 
         // Print FPS to terminal
         frameCount++;
