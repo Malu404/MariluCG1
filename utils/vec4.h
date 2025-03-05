@@ -4,7 +4,10 @@
 #include <algorithm>
 #include <cmath>
 #include <stdexcept>
+<<<<<<< HEAD
 #include "matriz4x4.h"
+=======
+>>>>>>> 599ad150694b7a912fd04510936c73a7cec28b53
 #include "vec3.h"
 
 using namespace std;
@@ -99,8 +102,11 @@ class Vec4{
         return Vec3(x, y, z);  
     }
 
+<<<<<<< HEAD
     
     
+=======
+>>>>>>> 599ad150694b7a912fd04510936c73a7cec28b53
 
 };
 #endif

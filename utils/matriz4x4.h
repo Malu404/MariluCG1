@@ -12,7 +12,11 @@ class Matrix4x4 {
 
         double m[4][4];
 
+<<<<<<< HEAD
         //construtor matriz identidade
+=======
+        //conztrutor matriz identidade
+>>>>>>> 599ad150694b7a912fd04510936c73a7cec28b53
         Matrix4x4() { set_I();}
 
         //matrix identidade
@@ -57,6 +61,7 @@ class Matrix4x4 {
         //matriz * matriz
         Matrix4x4 operator*(const Matrix4x4& other)
                 const { return Matrix4x4(
+<<<<<<< HEAD
                     m[0][0] * other.m[0][0] + m[0][1] * other.m[1][0] + m[0][2] * other.m[2][0] + m[0][3] * other.m[3][0],
                     m[0][0] * other.m[0][1] + m[0][1] * other.m[1][1] + m[0][2] * other.m[2][1] + m[0][3] * other.m[3][1],
                     m[0][0] * other.m[0][2] + m[0][1] * other.m[1][2] + m[0][2] * other.m[2][2] + m[0][3] * other.m[3][2],
@@ -198,4 +203,9 @@ class Matrix4x4 {
 
 };  
 
+=======
+                
+                ); }
+};
+>>>>>>> 599ad150694b7a912fd04510936c73a7cec28b53
 #endif
