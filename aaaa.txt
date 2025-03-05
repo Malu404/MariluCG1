@@ -1,0 +1,38 @@
+prova passada falamos de phong(especular difusa) calcular os vetores a prova ap1 girou nisso
+agora apresentamso todas as transformações(espelhamento cisalhamento rotações arbitrarias usando 2 tecnicas(muda coordenada outra com quaterniao))
+Prova tem 4 questões a 1 
+é multipla escolha se as transgormações estão na ordem certa
+Valendo 2 pontos no máximo.(;-;)
+
+Ex se RST gera a figura certa (rotação escala tranaslaçao)
+sendo que o certo era primeiro T R S
+
+a questão do telhado é um exemplo(q parece um coiso assim /\)
+Tipo como partir de um cubo para /\
+Primeiro escala o cubo, cisalha ele.
+
+Ele disse que pode fazer a matriz de cisalhamento 
+1   a   b   0
+c   1   d   0
+e   f   1   0
+0   0   0   1    
+
+e perguntar quals valores estão em a b c d e f 
+
+y' = y + delta y = y + tg(gama) x
+2 mUdança de camera(saber montar i j k da camera com atpoint(é o eye), e o plano sagital)
+saber montar a matriz world -> camera e camera -> world
+
+outra é eu quero que vc rode um ponto qualquer em um eixo que nao passa pela origem
+Pode pedir tnato para resolver por quarternio quanto para mudança de coordenada
+disse que uma delas é quaternio
+
+outra questão pode ser espelhamento em um ponto arbitrario
+
+Se for quaternio, vai precisar jogar pra origem, fazer a translação, e dps trazer de volta pra coordenada principal
+tem que saber montar o quaternio pra resolver o que a questão quer
+
+Pode cair com o vetor perpendicular
+
+Ele garantiu que cai quaternio.
+
