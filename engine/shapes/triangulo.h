@@ -11,6 +11,7 @@ public:
 
     Triangle( Vec3 v0, Vec3 v1, Vec3 v2, Material mat) : Shape(mat), v0(v0), v1(v1), v2(v2) {
         normal = (v1 - v0).cross(v2 - v0).normalize();
+        //normal = (v2 - v0).cross(v1 - v0).normalize();
     }
 
     inline Vec3 get_normal( Vec3 p) const override {
@@ -40,15 +41,30 @@ public:
 
     bool contains(Vec3 p) const {//tirei o const daqui de dentro do Vec3, nao sei se vai explodir o codigo 4/3/25 - 18:33
         // Verifica se o ponto p está dentro do triângulo
-        Vec3 edge1 = v1 - v0;
-        Vec3 edge2 = v2 - v0;
-        Vec3 edge3 = v2 - v1;
-        Vec3 c0 = p - v0;
-        Vec3 c1 = p - v1;
-        Vec3 c2 = p - v2;
-        return (edge1.cross(c0).dot(normal) >= 0 &&
-                edge2.cross(c1).dot(normal) >= 0 &&
-                edge3.cross(c2).dot(normal) >= 0);
+                    Vec3 edge1 = v1 - v0;
+                    Vec3 edge2 = v2 - v0;
+                    Vec3 v0p = p - v0;
+                
+                    // Calcula as coordenadas baricêntricas
+                    double d00 = edge1.dot(edge1);
+                    double d01 = edge1.dot(edge2);
+                    double d11 = edge2.dot(edge2);
+                    double d20 = v0p.dot(edge1);
+                    double d21 = v0p.dot(edge2);
+                    double denom = d00 * d11 - d01 * d01;
+                
+                    // Evita divisão por zero (triângulo degenerado)
+                    if (std::abs(denom) < 1e-8) return false;
+                
+                    // Calcula u e v
+                    double v = (d11 * d20 - d01 * d21) / denom;
+                    double w = (d00 * d21 - d01 * d20) / denom;
+                    double u = 1.0 - v - w;
+                
+                    // Verifica se o ponto está dentro do triângulo
+                    return (u >= -1e-8 && v >= -1e-8 && w >= -1e-8);
+                
+                
     }
 };
 

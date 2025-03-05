@@ -19,7 +19,7 @@
 using namespace std;
 
 int main() {
-    Vec3 p0 = Vec3(0,0,0);
+    Vec3 p0 = Vec3(0,0,10);
     
     double x_min = -2;
     double y_min = -2;
@@ -59,10 +59,10 @@ int main() {
     //Vec3 plane2_normal = Vec3(0.0, 0.0, 1.0);
     
     Material mat_malha = Material(
-        Vec3(0.8, 0.2, 0.2),   // Cor ambiente (vermelho)
-        Vec3(0.8, 0.2, 0.2),   // Cor difusa
+        Vec3(0.8, 0.2, 0.8),   // Cor ambiente (vermelho)
+        Vec3(0.8, 0.2, 0.8),   // Cor difusa
         Vec3(0.9, 0.5, 0.5),   // Cor especular (brilho)
-        100.0                    // Coeficiente de brilho
+        10.0                    // Coeficiente de brilho
     );
     
     Vec3 bg_color = Vec3(0.0, 0.0, 0.0);
@@ -121,10 +121,10 @@ int main() {
     double cone_radius = 4.0; // Set the cone radius
     
     Cone* cone = new Cone(cilinder_center, cilinder_center + d_cil * cilinder_height, cilinder_radius, mat_cone);
-    Malha* malha = new Malha("engine/shapes/cubo.obj", mat_malha);
+    Malha* malha = new Malha("engine/shapes/teapot400.obj", mat_malha);
     // Add lights
     Light light = Light(
-        Vec3(3.0, 3.0, 0.0),
+        Vec3(4.0, 3.0, 10.0),
         Vec3(1.0, 1.0, 1.0),
         0.7
     );
@@ -137,8 +137,8 @@ int main() {
     // scene.add_object(cilinder);
     scene.add_object(plane);
     scene.add_object(plane2);
-    // scene.add_object(cone);
-    scene.add_object(malha);
+    scene.add_object(cone);
+    //scene.add_object(malha);
 
     scene.add_light(light);
     
