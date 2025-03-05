@@ -1,13 +1,13 @@
 # Cubo.obj
 # Vértices (8 pontos)
-v -1.0 -1.0 -10.0   # Vértice 1
-v 1.0 -1.0 -10.0    # Vértice 2
-v 1.0 1.0 -10.0     # Vértice 3
-v -1.0 1.0 -10.0    # Vértice 4
-v -1.0 -1.0 -8.0   # Vértice 5
-v 1.0 -1.0 -8.0    # Vértice 6
-v 1.0 1.0 -8.0     # Vértice 7
-v -1.0 1.0 -8.0    # Vértice 8
+v -2.0 -2.0 -11.0
+v 2.0 -2.0 -11.0
+v 2.0 2.0 -11.0
+v -2.0 2.0 -11.0
+v -2.0 -2.0 -7.0
+v 2.0 -2.0 -7.0
+v 2.0 2.0 -7.0
+v -2.0 2.0 -7.0
 
 # Faces (12 triângulos)
 f 1 2 3            # Face frontal inferior

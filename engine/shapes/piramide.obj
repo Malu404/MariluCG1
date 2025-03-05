@@ -1,0 +1,15 @@
+# Cubo.obj
+# Vértices (5 pontos)
+v -2.0 -2.0 -7.0  # 1
+v 2.0 -2.0 -7.0   # 2
+v 2.0 -2.0 -11.0  # 3
+v -2.0 -2.0 -11.0 # 4
+v 0.0 1.46 -9.0   # 5
+
+# Faces (6 triângulos)
+f 2 3 1            # baixo
+f 3 4 1            # baixo
+f 3 4 5            # frente
+f 2 5 1            # tras
+f 1 5 4            # esq
+f 3 5 2            # dir

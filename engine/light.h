@@ -7,9 +7,8 @@ class Light {
     public:
         Vec3 pos;
         Vec3 color;
-        float intensity;
-        Light (): pos(Vec3()), color(Vec3(1.0, 1.0, 1.0)), intensity(1.0) {}
-        Light (Vec3 pos, Vec3 color, float intensity): pos(pos), color(color), intensity(intensity) {}
+        Light (): pos(Vec3()), color(Vec3(1.0, 1.0, 1.0)) {}
+        Light (Vec3 pos, Vec3 color, float intensity): pos(pos), color(color * intensity) {}
 };
 
 #endif
