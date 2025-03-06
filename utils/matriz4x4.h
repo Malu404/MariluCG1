@@ -5,6 +5,7 @@
 #include <iostream>
 #include <iomanip> 
 
+#include "vec3.h"
 #include "vec4.h"
 
 class Matrix4x4 {
@@ -12,11 +13,11 @@ class Matrix4x4 {
 
         double m[4][4];
 
-<<<<<<< HEAD
+
         //construtor matriz identidade
-=======
+
         //conztrutor matriz identidade
->>>>>>> 599ad150694b7a912fd04510936c73a7cec28b53
+
         Matrix4x4() { set_I();}
 
         //matrix identidade
@@ -61,7 +62,7 @@ class Matrix4x4 {
         //matriz * matriz
         Matrix4x4 operator*(const Matrix4x4& other)
                 const { return Matrix4x4(
-<<<<<<< HEAD
+
                     m[0][0] * other.m[0][0] + m[0][1] * other.m[1][0] + m[0][2] * other.m[2][0] + m[0][3] * other.m[3][0],
                     m[0][0] * other.m[0][1] + m[0][1] * other.m[1][1] + m[0][2] * other.m[2][1] + m[0][3] * other.m[3][1],
                     m[0][0] * other.m[0][2] + m[0][1] * other.m[1][2] + m[0][2] * other.m[2][2] + m[0][3] * other.m[3][2],
@@ -180,7 +181,8 @@ class Matrix4x4 {
         }
 
         Matrix4x4 shear_y_angle(const double angle){
-            double s_xz = std::tan(angle);
+            double angle_r = angle * M_PI / 180.0;
+            double s_xz = std::tan(angle_r);
             return Matrix4x4(
                 m[0][0] = 1, m[0][1] = 0, m[0][2] = 0, m[0][3] = 0,
                 m[1][0] = s_xz, m[1][1] = 1, m[1][2] = 0, m[1][3] = 0,
@@ -191,7 +193,8 @@ class Matrix4x4 {
 
 
         Matrix4x4 shear_z_angle(const double angle){
-            double s_xy = std::tan(angle);
+            double angle_r = angle * M_PI / 180.0;
+            double s_xy = std::tan(angle_r);
             return Matrix4x4(
                 m[0][0] = 1, m[0][1] = 0, m[0][2] = 0, m[0][3] = 0,
                 m[1][0] = 0, m[1][1] = 1, m[1][2] = 0, m[1][3] = 0,
@@ -201,11 +204,86 @@ class Matrix4x4 {
             
         }
 
+
+        //rotação em um eixo especifico
+        Matrix4x4 ratotion(double angle, char eixo){
+            double angle_r = angle * M_PI / 180.0;
+            double cos = std::cos(angle_r);
+            double sin = std::sin(angle_r);
+
+            Matrix4x4 matrix;
+            switch (eixo) {
+                case 'x':
+                    matrix.m[1][1] = cos;
+                    matrix.m[1][2] = -sin;
+                    matrix.m[2][1] = sin;
+                    matrix.m[2][2] = cos;
+                    break;
+                case 'y':
+                    matrix.m[0][0] = cos;
+                    matrix.m[0][2] = sin;
+                    matrix.m[2][0] = -sin;
+                    matrix.m[2][2] = cos;
+                    break;
+                case 'z':
+                    matrix.m[0][0] = cos;
+                    matrix.m[0][1] = -sin;
+                    matrix.m[1][0] = sin;
+                    matrix.m[1][1] = cos;
+                    break;
+                default:
+                    throw std::invalid_argument("invalido. use x, y, z.");
+            
+            }
+            return matrix;
+        }
+
+
+        Matrix4x4 rotation_arbitrary_axis(const Vec3& eixo, double angle){
+            Vec3 eixo_normal = eixo.normalize();
+            double x = eixo_normal.x;
+            double y = eixo_normal.y;
+            double z = eixo_normal.z;
+
+            double cos = std::cos(angle);
+            double sin = std::sin(angle);
+            double um_menos_cos = 1.0 - cos;
+
+            return Matrix4x4(
+                m[0][0] = cos + x*x*um_menos_cos, m[0][1] = x*y*um_menos_cos - z*sin, m[0][2] = x*z*um_menos_cos + y*sin, m[0][3] = 0,
+
+                m[1][0] = y*x*um_menos_cos + z*sin, m[1][1] = cos + y*y/um_menos_cos, m[1][2] = y*z*um_menos_cos - x*sin, m[1][3] = 0,
+
+                m[2][0] = z*x*um_menos_cos - y*sin, m[2][1] = z*y*um_menos_cos + x*sin, m[2][2] = cos + z*z*um_menos_cos, m[2][3] = 0,
+
+                m[3][0] = 0, m[3][1] = 0, m[3][2] = 0, m[3][3] = 1
+            );
+
+        }
+
+        //reflexão
+        Matrix4x4 mirror(char plano) {
+            Matrix4x4 matrix;
+    
+            switch (plano) {
+            case 'x':
+            case 'X':
+                matrix.m[2][2] = -1; // espelho cortando o plano XY
+                break;
+            case 'y':
+            case 'Y':
+                matrix.m[0][0] = -1; // espelho cortando o plano YZ
+                break;
+            case 'z':
+            case 'Z':
+                matrix.m[1][1] = -1; // espelho cortando o plano XZ 
+                break;
+            default:
+                throw std::invalid_argument("Invalido . Use x, y, z.");
+            }
+    
+            return matrix;
+        }
+
 };  
 
-=======
-                
-                ); }
-};
->>>>>>> 599ad150694b7a912fd04510936c73a7cec28b53
-#endif
