@@ -11,9 +11,9 @@ class Plane : public Shape {
         Plane (): p0(Vec3(0.0, 0.0, 0.0)), normal(Vec3(0.0, -1.0, 0.0)), Shape() {}
         Plane (Vec3 p0, Vec3 normal, Material mat): p0(p0), normal(normal), Shape(mat) {}
         
-        inline Vec3 get_normal(Vec3 p) override { return normal; }
+        inline Vec3 get_normal(Vec3 p) const override { return normal; }
 
-        double intersects(Ray r) override {
+        double intersects(Ray r) const override {
             double top = normal.dot(r.origin - p0);
             double bottom = normal.dot(r.dr);
             if (bottom == 0.0) { return -INFINITY; }

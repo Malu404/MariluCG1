@@ -11,9 +11,9 @@ class Sphere : public Shape {
         Sphere (): center(Vec3(0.0, 0.0, 0.0)), radius(1.0), Shape() {}
         Sphere (Vec3 center, double radius, Material mat): center(center), radius(radius), Shape(mat) {}
         
-        inline Vec3 get_normal(Vec3 p) override { return ( p - center ).normalize(); }
+        inline Vec3 get_normal(Vec3 p) const override { return ( p - center ).normalize(); }
         
-        double intersects(Ray r) override {
+        double intersects(Ray r) const override {
             Vec3 v = center - r.origin;
             double a = r.dr.dot(r.dr);
             double b = -2.0 * (r.dr.dot(v));

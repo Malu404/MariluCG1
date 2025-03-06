@@ -4,6 +4,10 @@
 #include "shape.h"
 #include "triangulo.h"
 #include "../../utils/vec3.h"
+#include "material.h"
+#include <array> 
+#include <vector>
+#include <string>
 #include <vector>
 #include <string>
 #include <fstream>
@@ -45,7 +49,11 @@ public:
                     vertexStream >> vertexIndex;
                     faceIndices.push_back(vertexIndex - 1);
                 }
-                faces.push_back({faceIndices[0], faceIndices[1], faceIndices[2]});
+                faces.push_back(std::array<int, 3>{
+                    faceIndices[0], 
+                    faceIndices[1], 
+                    faceIndices[2]
+                });
             }
         }
     }
@@ -56,7 +64,7 @@ public:
         }
     }
 
-    inline Vec3 get_normal(Vec3 p) override {
+    inline Vec3 get_normal(Vec3 p) const override {
         // Implementação simplificada: retorna a normal do primeiro triângulo que contém o ponto p
         for (const auto& triangle : triangles) {
             if (triangle.contains(p)) {
@@ -65,10 +73,28 @@ public:
         }
         return Vec3(0, 0, 0); // Normal padrão se nenhum triângulo contém o ponto
     }
-
-    double intersects(Ray r) override {
+    /*inline Vec3 get_normal(Vec3 p) const override {
         double t_min = INFINITY;
+        Vec3 normal_correta = Vec3(0, 0, 0);
+    
+        // Cria um raio partindo do ponto p em direção oposta à normal (para evitar self-shadowing)
+        Ray raio = Ray(p + normal_correta * 1e-4, -normal_correta); 
+    
         for (const auto& triangle : triangles) {
+            double t = triangle.intersects(raio);
+            if (t > 0 && t < t_min) {
+                t_min = t;
+                normal_correta = triangle.normal;
+            }
+        }
+    
+        return normal_correta;
+    }*/
+    
+
+    double intersects(Ray r) const override {
+        double t_min = INFINITY;
+        for (const auto& triangle : triangles) {//tirei o const daqui antes do auto, nao sei se vai explodir o codigo 4/3/25 - 18:33
             double t = triangle.intersects(r);
             if (t > 0 && t < t_min) {
                 t_min = t;
