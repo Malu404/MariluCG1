@@ -21,11 +21,20 @@ class Matrix4x4 {
         Matrix4x4() { set_I();}
 
         //matrix identidade
-        void set_I() {
-            m[0][0] = 1; m[0][1] = 0; m[0][2] = 0; m[0][3] = 0;
-            m[1][0] = 0; m[1][1] = 1; m[1][2] = 0; m[1][3] = 0;
-            m[2][0] = 0; m[2][1] = 0; m[2][2] = 1; m[2][3] = 0;
-            m[3][0] = 0; m[3][1] = 0; m[3][2] = 0; m[3][3] = 1;
+        Matrix4x4 set_I() {
+            for (int i = 0; i < 4; i++) {
+                for (int j = 0; j < 4; j++) {
+                    if (i == j) {
+                        m[i][j] = 1.0;
+                    } else {
+                        m[i][j] = 0.0;
+                    }
+                }
+            }
+            // m[0][0] = 1; m[0][1] = 0; m[0][2] = 0; m[0][3] = 0;
+            // m[1][0] = 0; m[1][1] = 1; m[1][2] = 0; m[1][3] = 0;
+            // m[2][0] = 0; m[2][1] = 0; m[2][2] = 1; m[2][3] = 0;
+            // m[3][0] = 0; m[3][1] = 0; m[3][2] = 0; m[3][3] = 1;
         }
 
         //construtor da matriz4x4
@@ -284,6 +293,41 @@ class Matrix4x4 {
     
             return matrix;
         }
+
+
+
+    // matrix necessaria para reflexão oeixo arbitrario
+    Matrix4x4 householder(const Vec3& vetor_normal){
+        Vec3 normal = vetor_normal.normalize();
+        double nor = vetor_normal.magnitude();
+        Matrix4x4 householder_matrix = set_I();
+        Matrix4x4 n_nt;
+
+        n_nt.m[0][0] = normal.x*normal.x;
+        n_nt.m[0][1] = normal.x*normal.y;
+        n_nt.m[0][2] = normal.x*normal.z;
+        n_nt.m[0][3] = 0;
+        n_nt.m[1][0] = normal.y*normal.x;
+        n_nt.m[1][1] = normal.y*normal.y;
+        n_nt.m[1][2] = normal.y*normal.z;
+        n_nt.m[1][3] = 0;
+        n_nt.m[2][0] = normal.z*normal.x;
+        n_nt.m[2][1] = normal.z*normal.y;
+        n_nt.m[2][2] = normal.z*normal.z;
+        n_nt.m[2][3] = 0;
+        n_nt.m[3][0] = 0;
+        n_nt.m[3][1] = 0;
+        n_nt.m[3][2] = 0;
+        n_nt.m[3][3] = 0;
+
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                householder_matrix.m[i][j] -= 2.0 * n_nt.m[i][j] / (nor * nor);
+            }
+        
+        }
+        return householder_matrix;
+    }
 
 };  
 
