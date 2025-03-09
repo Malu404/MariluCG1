@@ -121,7 +121,7 @@ int main() {
     double cone_radius = 4.0; // Set the cone radius
     
     Cone* cone = new Cone(cilinder_center, cilinder_center + d_cil * cilinder_height, cilinder_radius, mat_cone);
-    Malha* malha = new Malha("engine/shapes/teapot400.obj", mat_malha);
+    Malha* malha = new Malha("engine/shapes/teapot_rotated.obj", mat_malha);
     // Add lights
     Light light = Light(
         Vec3(4.0, 3.0, 10.0),
@@ -134,10 +134,10 @@ int main() {
     
     Scene scene = Scene(ambient_light);
     // scene.add_object(sphere);
-    // scene.add_object(cilinder);
+     scene.add_object(cilinder);
     scene.add_object(plane);
     scene.add_object(plane2);
-    scene.add_object(cone);
+    //scene.add_object(cone);
     //scene.add_object(malha);
 
     scene.add_light(light);
