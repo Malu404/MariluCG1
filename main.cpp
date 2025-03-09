@@ -76,7 +76,7 @@ int main() {
         Vec3(0.2, 0.3, 0.8), //ambiente
         Vec3(0.2, 0.3, 0.8), //difuso
         Vec3(0.2, 0.3, 0.8),// especular
-        10.0
+        1.0
     );
     Material mat_cone = Material(
         Vec3(0.8, 0.3, 0.2), // Ambient
