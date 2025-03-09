@@ -8,34 +8,37 @@
 #include "vec3.h"
 #include "vec4.h"
 
+#define M_PI 3.14159265358979323846 
+
 class Matrix4x4 {
     public:
 
         double m[4][4];
-
+        
 
         //construtor matriz identidade
 
         //conztrutor matriz identidade
 
-        Matrix4x4() { set_I();}
+        Matrix4x4() { I();}
 
         //matrix identidade
-        Matrix4x4 set_I() {
-            for (int i = 0; i < 4; i++) {
-                for (int j = 0; j < 4; j++) {
-                    if (i == j) {
-                        m[i][j] = 1.0;
-                    } else {
-                        m[i][j] = 0.0;
-                    }
-                }
-            }
-            // m[0][0] = 1; m[0][1] = 0; m[0][2] = 0; m[0][3] = 0;
-            // m[1][0] = 0; m[1][1] = 1; m[1][2] = 0; m[1][3] = 0;
-            // m[2][0] = 0; m[2][1] = 0; m[2][2] = 1; m[2][3] = 0;
-            // m[3][0] = 0; m[3][1] = 0; m[3][2] = 0; m[3][3] = 1;
+        Matrix4x4 I() {
+        return Matrix4x4(
+            m[0][0] = 1, m[0][1] = 0, m[0][2] = 0, m[0][3] = 0,
+            m[1][0] = 0, m[1][1] = 1, m[1][2] = 0, m[1][3] = 0,
+            m[2][0] = 0, m[2][1] = 0, m[2][2] = 1, m[2][3] = 0,
+            m[3][0] = 0, m[3][1] = 0, m[3][2] = 0, m[3][3] = 1);
         }
+            // for (int i = 0; i < 4; i++) {
+            //     for (int j = 0; j < 4; j++) {
+            //         if (i == j) {
+            //             m[i][j] = 1.0;
+            //         } else {
+            //             m[i][j] = 0.0;
+            //         }
+            //     }
+            // }
 
         //construtor da matriz4x4
         Matrix4x4(
@@ -297,10 +300,10 @@ class Matrix4x4 {
 
 
     // matrix necessaria para reflexão oeixo arbitrario
-    Matrix4x4 householder(const Vec3& vetor_normal){
+    Matrix4x4 householder(const Vec3& pc, Vec3& vetor_normal){
         Vec3 normal = vetor_normal.normalize();
         double nor = vetor_normal.magnitude();
-        Matrix4x4 householder_matrix = set_I();
+        Matrix4x4 householder_matrix = I();
         Matrix4x4 n_nt;
 
         n_nt.m[0][0] = normal.x*normal.x;
@@ -326,8 +329,9 @@ class Matrix4x4 {
             }
         
         }
-        return householder_matrix;
+        Matrix4x4 matrix_reflection = translation(pc.x, pc.y, pc.z) * householder_matrix * translation(-pc.x, -pc.y, -pc.z);
+        return matrix_reflection;
     }
 
 };  
-
+#endif

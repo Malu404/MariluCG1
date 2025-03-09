@@ -31,7 +31,11 @@ class Canvas {
                     Ray r = Ray(pos, dr_normalized); // nosso raio
 
                     // pega o objeto mais próximo na cena
+
                     auto [closest_shape, t] = scene.get_closest_object(r);
+                    // auto closest_shape_and_t = scene.get_closest_object(r);
+                    // auto& closest_shape = std::get<0>(closest_shape_and_t);
+                    // auto& t = std::get<1>(closest_shape_and_t);
 
                     // se ele não estiver atrás da câmera, calcula aS luzes (mas testa pra sombra antes né etc.)
                     if (t > 0.0) {

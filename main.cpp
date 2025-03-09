@@ -4,6 +4,8 @@
 #include <chrono>
 #include <SDL.h>
 
+#include "utils/vec4.h"
+#include "utils/matriz4x4.h"
 #include "utils/vec3.h"
 #include "engine/canvas.h"
 //#include "engine/camera.h"
@@ -111,14 +113,23 @@ int main() {
     Plane* plane2 = new Plane(plane2_p0, plane2_normal, mat_p2);
 
 
-    //testando cilindro
-    Vec3 cilinder_center2 = Vec3(0.0, -5.0, -20);
+    //testando cilindro2
+    Vec3 cilinder_center2 = Vec3(15.0, -5.0, -20.0);
     Vec3 d_cil2 = Vec3(0, 1, 0);
     double cilinde_radius2 = 4.0;
     double cilinder_height2 = 10.0;
 
     Cilinder* cilinder2 = new Cilinder(cilinder_center2, d_cil2, cilinde_radius2, cilinder_height2, mat_cilinder);
 
+    //testando cilinro3
+    Vec3 cilinder_center3 = Vec3(-15.0, -5.0, -20.0);
+    Vec3 d_cil3 = Vec3(0, 1, 0);
+    double cilinde_radius3 = 4.0;
+    double cilinder_height3 = 10.0;
+
+    Cilinder* cilinder3 = new Cilinder(cilinder_center3, d_cil3, cilinde_radius3, cilinder_height3, mat_cilinder);
+
+    
 
     
     Vec3 cilinder_center = Vec3(0.0, -5.0, -20.0);
@@ -145,11 +156,12 @@ int main() {
     
     Scene scene = Scene(ambient_light);
     // scene.add_object(sphere);
-    scene.add_object(cilinder);
+    //scene.add_object(cilinder);
     scene.add_object(plane);
     scene.add_object(plane2);
     scene.add_object(cone);
     scene.add_object(cilinder2);
+    scene.add_object(cilinder3);
     //scene.add_object(malha);
 
     scene.add_light(light);

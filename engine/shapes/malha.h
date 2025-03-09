@@ -19,6 +19,7 @@ public:
     std::vector<Vec3> vertices;
     std::vector<std::array<int, 3>> faces;
     std::vector<Triangle> triangles;
+    
 
     Malha(const std::string& filepath, Material mat) : Shape(mat) {
         load_obj(filepath);
@@ -102,6 +103,24 @@ public:
         }
         return t_min == INFINITY ? -INFINITY : t_min;
     }
+
+
+    
+    std::pair<Vec3, Vec3> calculate_bounding_box() {
+        Vec3 min_point = Vec3(INFINITY, INFINITY, INFINITY);
+        Vec3 max_point = Vec3(-INFINITY, -INFINITY, -INFINITY);
+        for (Vec3 vertex : vertices) {
+            min_point.x = min(vertex.x, min_point.x);
+            min_point.y = min(vertex.y, min_point.y);
+            min_point.z = min(vertex.z, min_point.z);
+    
+            max_point.x = max(vertex.x, max_point.x);
+            max_point.y = max(vertex.y, max_point.y);
+            max_point.z = max(vertex.z, max_point.z);
+        }
+        return {min_point, max_point};
+    }
+    
 };
 
 #endif
