@@ -134,11 +134,11 @@ int main() {
     
     Scene scene = Scene(ambient_light);
     // scene.add_object(sphere);
-     scene.add_object(cilinder);
+    //scene.add_object(cilinder);
     scene.add_object(plane);
     scene.add_object(plane2);
     //scene.add_object(cone);
-    //scene.add_object(malha);
+    scene.add_object(malha);
 
     scene.add_light(light);
     

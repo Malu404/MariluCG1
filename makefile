@@ -4,15 +4,13 @@
 CXX = g++
 
 # Compiler flags
-CXXFLAGS = -O2 -march=native `sdl2-config --cflags`
-# Ultimate optimization
-# CXXFLAGS = -Ofast -march=native -flto -ftree-vectorize -finline-functions -g0 -ffunction-sections -fdata-sections -funroll-loops -ffast-math -Wl,--gc-sections -fno-strict-aliasing -funsafe-math-optimizations `sdl2-config --cflags`
+CXXFLAGS = -O2 -march=native -I"E:/downloads ssd/SDL2/include" -D_REENTRANT
 
 # Linker flags
-LDFLAGS = `sdl2-config --libs` 
+LDFLAGS = -L"E:/downloads ssd/SDL2/lib" -lSDL2 -lSDL2_image
 
 # Source files
-SRCS = main.cpp
+SRCS = main.cpp engine/shapes/textura.cpp
 
 # Output executable
 TARGET = cg1
@@ -21,15 +19,15 @@ TARGET = cg1
 all: $(TARGET)
 
 run: $(TARGET)
-	./$(TARGET)
+    ./$(TARGET)
 
 # Build the target
 $(TARGET): $(SRCS)
-	$(CXX) $(CXXFLAGS) -o $(TARGET) $(SRCS) $(LDFLAGS)
+    $(CXX) $(CXXFLAGS) -o $(TARGET) $(SRCS) $(LDFLAGS)
 
 # Clean up build files
 clean:
-	rm -f $(TARGET)
+    rm -f $(TARGET)
 
 # Phony targets
 .PHONY: all clean
