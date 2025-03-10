@@ -124,7 +124,7 @@ public:
         return t;
     }
 
-private:
+
     double cos_angle;
     double cos_angle_sq;
 

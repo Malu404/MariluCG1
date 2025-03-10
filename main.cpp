@@ -132,7 +132,7 @@ int main() {
     
 
     
-    Vec3 cilinder_center = Vec3(0.0, -5.0, -20.0);
+    Vec3 cilinder_center = Vec3(-15.0, -5.0, -20.0);
     Vec3 d_cil = Vec3(0, 1, 0);
     double cilinder_radius = 4.0; // Corrigido
     double cilinder_height = 10.0;
@@ -142,8 +142,8 @@ int main() {
     Vec3 cone_top_vertex = Vec3(0.0, 10.0 , -10.0); // Set the cone top vertex position
     double cone_radius = 4.0; // Set the cone radius
     
-    Cone* cone = new Cone(cilinder_center, cilinder_center + d_cil * cilinder_height, cilinder_radius, mat_cone);
-    Malha* malha = new Malha("engine/shapes/teapot_rotated.obj", mat_malha);
+    // Cone* cone = new Cone(cilinder_center, cilinder_center + d_cil * cilinder_height, cilinder_radius, mat_cone);
+    // Malha* malha = new Malha("engine/shapes/teapot_rotated.obj", mat_malha);
     // Add lights
     Light light = Light(
         Vec3(4.0, 3.0, 10.0),
@@ -154,20 +154,77 @@ int main() {
     
     Canvas canvas = Canvas(p0, x_min, y_min, x_max, y_max, d1, cols1, rows1, bg_color);
     
-    //não sei como chama
-    // Matrix4x4 ratotio = Matrix4x4::shear_x_angle(30.0);
-    // cilinder2->malha.transform(ratotio);
+    // Criação do cone
+    Cone* cone = new Cone(cilinder_center, cilinder_center + d_cil * cilinder_height, cilinder_radius, mat_cone);
+
+// Rotacionar o cone
+// Vec3 rotation_axis = Vec3(0, 1, 0);
+// double rotation_angle = 45.0;
+// Matrix4x4 rotation_matrix = Matrix4x4::rotation_arbitrary_axis(rotation_axis, rotation_angle);
+// cilinder->center = rotation_matrix * cilinder->center;
+// cilinder->direction = rotation_matrix * cilinder->direction;
+
+// // Atualiza o top_center após a rotação
+// Vec3 top_center = cilinder->center + cilinder->direction * cilinder->height;
+
+
+
+// Vec3 translation_vector = Vec3(5, 0, 0); // Move 5 unidades no eixo X
+// Matrix4x4 translation_matrix = Matrix4x4::translation(translation_vector.x, translation_vector.y, translation_vector.z);
+// cilinder->center = translation_matrix * cilinder->center;
+    
+// Vec3 translation_vector = -cilinder->center;
+
+// // Crie a matriz de translação
+// Matrix4x4 translation_matrix = Matrix4x4::translation(translation_vector.x, translation_vector.y, translation_vector.z);
+
+// // Aplique a translação ao center do cilindro
+// cilinder->center = translation_matrix * cilinder->center;
+
+// // Atualize o top_center após a translação
+// Vec3 top_center = cilinder->center + cilinder->direction * cilinder->height;
+
+// std::cout << "Novo centro do cilindro: (" << cilinder->center.x << ", " << cilinder->center.y << ", " << cilinder->center.z << ")" << std::endl;
+
+
+
+// Vec3 translation_vector = -cilinder->center;
+// Matrix4x4 translation_matrix = Matrix4x4::translation(translation_vector.x, translation_vector.y, translation_vector.z);
+// cilinder->center = translation_matrix * cilinder->center;
+
+// // 2. Aplicar a rotação (45 graus em torno do eixo Y)
+// double rotation_angle = 45.0; // Ângulo de rotação em graus
+// Matrix4x4 rotation_matrix = Matrix4x4::rotation(rotation_angle, 'x');
+// cilinder->center = rotation_matrix * cilinder->center;
+// cilinder->direction = rotation_matrix * cilinder->direction; // Rotaciona a direção do cilindro
+
+// // 3. Transladar de volta para a posição original
+// Matrix4x4 inverse_translation_matrix = Matrix4x4::translation(-translation_vector.x, -translation_vector.y, -translation_vector.z);
+// cilinder->center = inverse_translation_matrix * cilinder->center;
+
+// // Atualize o top_center após a rotação e translação
+// Vec3 top_center = cilinder->center + cilinder->direction * cilinder->height;
+
+// // Verifique o resultado
+// std::cout << "Novo centro do cilindro: (" << cilinder->center.x << ", " << cilinder->center.y << ", " << cilinder->center.z << ")" << std::endl;
+// std::cout << "Nova direção do cilindro: (" << cilinder->direction.x << ", " << cilinder->direction.y << ", " << cilinder->direction.z << ")" << std::endl;
+
+
+
+
+
+
     
     
     Scene scene = Scene(ambient_light);
     // scene.add_object(sphere);
-    //scene.add_object(cilinder);
+    scene.add_object(cilinder);
     scene.add_object(plane);
     scene.add_object(plane2);
-    //scene.add_object(cone);
-    scene.add_object(cilinder2);
+    scene.add_object(cone);
+    //scene.add_object(cilinder2);
     //scene.add_object(cilinder3);
-    scene.add_object(malha);
+    //scene.add_object(malha);
 
     scene.add_light(light);
     
