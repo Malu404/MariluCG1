@@ -78,7 +78,7 @@ int main() {
         Vec3(0.2, 0.3, 0.8), //ambiente
         Vec3(0.2, 0.3, 0.8), //difuso
         Vec3(0.2, 0.3, 0.8),// especular
-        10.0
+        1.0
     );
     Material mat_cone = Material(
         Vec3(0.8, 0.3, 0.2), // Ambient
@@ -143,7 +143,7 @@ int main() {
     double cone_radius = 4.0; // Set the cone radius
     
     Cone* cone = new Cone(cilinder_center, cilinder_center + d_cil * cilinder_height, cilinder_radius, mat_cone);
-    Malha* malha = new Malha("engine/shapes/teapot400.obj", mat_malha);
+    Malha* malha = new Malha("engine/shapes/teapot_rotated.obj", mat_malha);
     // Add lights
     Light light = Light(
         Vec3(4.0, 3.0, 10.0),
@@ -154,15 +154,20 @@ int main() {
     
     Canvas canvas = Canvas(p0, x_min, y_min, x_max, y_max, d1, cols1, rows1, bg_color);
     
+    //não sei como chama
+    // Matrix4x4 ratotio = Matrix4x4::shear_x_angle(30.0);
+    // cilinder2->malha.transform(ratotio);
+    
+    
     Scene scene = Scene(ambient_light);
     // scene.add_object(sphere);
     //scene.add_object(cilinder);
     scene.add_object(plane);
     scene.add_object(plane2);
-    scene.add_object(cone);
+    //scene.add_object(cone);
     scene.add_object(cilinder2);
-    scene.add_object(cilinder3);
-    //scene.add_object(malha);
+    //scene.add_object(cilinder3);
+    scene.add_object(malha);
 
     scene.add_light(light);
     

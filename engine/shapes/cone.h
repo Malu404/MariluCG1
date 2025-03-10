@@ -25,10 +25,16 @@ public:
         axis_direction = (top_vertex - base_center).normalize();
     }
 
-    inline Vec3 get_normal(Vec3 p) const override {
+    /*inline Vec3 get_normal(Vec3 p) const override {
         Vec3 v = p - top_vertex;
         double m = sqrt(v.dot(v) - pow(v.dot(axis_direction), 2));
         return (v - axis_direction * m * (radius / height)).normalize();
+    }*/
+    inline Vec3 get_normal(Vec3 p) const override {
+        Vec3 apex_to_p = p - top_vertex;
+        double projection = apex_to_p.dot(axis_direction);
+        Vec3 normal = (apex_to_p - axis_direction * projection).normalize();
+        return normal;
     }
 
     double intersects(Ray r) const override {

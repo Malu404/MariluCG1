@@ -8,6 +8,7 @@
 // #include "matriz4x4.h"
 
 
+
 #include "vec3.h"
 
 using namespace std;
@@ -24,8 +25,17 @@ class Vec4{
     Vec4 &operator=(Vec4 &&) = default;
     Vec4(double x, double y, double z, double w = 1.0)
         : x(x), y(y), z(z), w(w) {}
+    Vec3 to_vec3() const {
+        if (w != 0) {
+            return Vec3(x / w, y / w, z / w);
+        }
+        return Vec3(x, y, z);  // Direction vector
+    }
+    
     Vec4(const Vec3& v, double w = 1.0) : x(v.x), y(v.y), z(v.z), w(w) {}
-
+    Vec4 operator=(Vec3& vetor){
+        return Vec4(vetor.x, vetor.y, vetor.z, 1.0);
+      }
     //adição
     Vec4 operator+(const Vec4& other) const { 
         return Vec4(x + other.x, y + other.y, z + other.z, w + other.w);
@@ -95,13 +105,14 @@ class Vec4{
     //     return vec4(std::max(x, other.x), std::max(y, other.y), std::max(z, other.z), std::max(w, other.w));
     // }
 
-     Vec3 to_vec3() const {
-        if (w != 0) {
-            return Vec3(x / w, y / w, z / w);
-        }
-        return Vec3(x, y, z);  
-    }
+    //  Vec3 to_vec3() const {
+    //     if (w != 0) {
+    //         return Vec3(x / w, y / w, z / w);
+    //     }
+    //     return Vec3(x, y, z);  
+    // }
 
+    
 
 
 };

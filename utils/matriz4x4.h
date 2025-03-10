@@ -7,8 +7,8 @@
 
 #include "vec3.h"
 #include "vec4.h"
+#define  M_PI  3.14159265358979323846264338327950288
 
-#define M_PI 3.14159265358979323846 
 
 class Matrix4x4 {
     public:
@@ -20,7 +20,7 @@ class Matrix4x4 {
 
         //conztrutor matriz identidade
 
-        Matrix4x4() { I();}
+         Matrix4x4() { I();}
 
         //matrix identidade
         Matrix4x4 I() {
@@ -98,8 +98,14 @@ class Matrix4x4 {
                     m[3][0] * other.m[0][2] + m[3][1] * other.m[1][2] + m[3][2] * other.m[2][2] + m[3][3] * other.m[3][2],
                     m[3][0] * other.m[0][3] + m[3][1] * other.m[1][3] + m[3][2] * other.m[2][3] + m[3][3] * other.m[3][3]
                 ); }
+        
+        Vec3 operator*(const Vec3& v) const {
+            Vec4 v4(v, 0.0);
+            Vec4 result = (*this) * v4;
+            return Vec3(result.x, result.y, result.z);
+        }
 
-
+        
                 //mutiplicaação vetor4 matrix
         Vec4 operator*(const Vec4& v) const {
                     return Vec4(
@@ -134,204 +140,230 @@ class Matrix4x4 {
                     -m[2][0],  -m[2][1],  -m[2][2],  -m[2][3], 
                     -m[3][0],  -m[3][1],  -m[3][2],  -m[3][3]);
                 }
-        Matrix4x4 translation(const double tx, double ty, double tz) {
-            return Matrix4x4(
-                m[0][0] = 1, m[0][1] = 0, m[0][2] = 0, m[0][3] = tx,
-                m[1][0] = 0, m[1][1] = 1, m[1][2] = 0, m[1][3] = ty,
-                m[2][0] = 0, m[2][1] = 0, m[2][2] = 1, m[2][3] = tz,
-                m[3][0] = 0, m[3][1] = 0, m[3][2] = 0, m[3][3] = 1
-                );
-        }
 
-        Matrix4x4 scale_matrix(const double sx, double sy, double sz){
-            return Matrix4x4(
-                m[0][0] = sx, m[0][1] = 0, m[0][2] = 0, m[0][3] = 0,
-                m[1][0] = 0, m[1][1] = sy, m[1][2] = 0, m[1][3] = 0,
-                m[2][0] = 0, m[2][1] = 0, m[2][2] = sz, m[2][3] = 0,
-                m[3][0] = 0, m[3][1] = 0, m[3][2] = 0, m[3][3] = 1
-            );
-        }
-
-
-        Matrix4x4 shear_x(const double s_yz, double s_zy){
-            return Matrix4x4(
-                m[0][0] = 1, m[0][1] = s_yz, m[0][2] = s_zy, m[0][3] = 0,
-                m[1][0] = 0, m[1][1] = 1, m[1][2] = 0, m[1][3] = 0,
-                m[2][0] = 0, m[2][1] = 0, m[2][2] = 1, m[2][3] = 0,
-                m[3][0] = 0, m[3][1] = 0, m[3][2] = 0, m[3][3] = 1
-            );
-        }
-
-
-
-        Matrix4x4 shear_y(const double s_xz, double s_zx) {
-            return Matrix4x4(
-                m[0][0] = 1, m[0][1] = 0, m[0][2] = 0, m[0][3] = 0,
-                m[1][0] = s_xz, m[1][1] = 1, m[1][2] = s_zx, m[1][3] = 0,
-                m[2][0] = 0, m[2][1] = 0, m[2][2] = 1, m[2][3] = 0,
-                m[3][0] = 0, m[3][1] = 0, m[3][2] = 0, m[3][3] = 1
-            );
-        }
-
-        Matrix4x4 shear_z(const double s_xy, double s_yx){
-            return  Matrix4x4(
-                m[0][0] = 1, m[0][1] = 0, m[0][2] = 0, m[0][3] = 0,
-                m[1][0] = 0, m[1][1] = 1, m[1][2] = 0, m[1][3] = 0,
-                m[2][0] = s_xy, m[2][1] = s_yx, m[2][2] = 1, m[2][3] = 0,
-                m[3][0] = 0, m[3][1] = 0, m[3][2] = 0, m[3][3] = 1
-            );
-        }
-
-        Matrix4x4 shear_x_angle(const double angle){
-            double s_yz = std::tan(angle);
-            return Matrix4x4(
-                m[0][0] = 1, m[0][1] = s_yz, m[0][2] = 0, m[0][3] = 0,
-                m[1][0] = 0, m[1][1] = 1, m[1][2] = 0, m[1][3] = 0,
-                m[2][0] = 0, m[2][1] = 0, m[2][2] = 1, m[2][3] = 0,
-                m[3][0] = 0, m[3][1] = 0, m[3][2] = 0, m[3][3] = 1
-            );
-        }
-
-        Matrix4x4 shear_y_angle(const double angle){
-            double angle_r = angle * M_PI / 180.0;
-            double s_xz = std::tan(angle_r);
-            return Matrix4x4(
-                m[0][0] = 1, m[0][1] = 0, m[0][2] = 0, m[0][3] = 0,
-                m[1][0] = s_xz, m[1][1] = 1, m[1][2] = 0, m[1][3] = 0,
-                m[2][0] = 0, m[2][1] = 0, m[2][2] = 1, m[2][3] = 0,
-                m[3][0] = 0, m[3][1] = 0, m[3][2] = 0, m[3][3] = 1
-            );
-        }
-
-
-        Matrix4x4 shear_z_angle(const double angle){
-            double angle_r = angle * M_PI / 180.0;
-            double s_xy = std::tan(angle_r);
-            return Matrix4x4(
-                m[0][0] = 1, m[0][1] = 0, m[0][2] = 0, m[0][3] = 0,
-                m[1][0] = 0, m[1][1] = 1, m[1][2] = 0, m[1][3] = 0,
-                m[2][0] = s_xy, m[2][1] = 0, m[2][2] = 1, m[2][3] = 0,
-                m[3][0] = 0, m[3][1] = 0, m[3][2] = 0, m[3][3] = 1
-            );
+              static  Matrix4x4 translation(const double tx, double ty, double tz) {
+                    Matrix4x4 matrix;
+                    return Matrix4x4(
+                        matrix.m[0][0] = 1, matrix.m[0][1] = 0, matrix.m[0][2] = 0, matrix.m[0][3] = tx,
+                        matrix.m[1][0] = 0, matrix.m[1][1] = 1, matrix.m[1][2] = 0, matrix.m[1][3] = ty,
+                        matrix.m[2][0] = 0, matrix.m[2][1] = 0, matrix.m[2][2] = 1, matrix.m[2][3] = tz,
+                        matrix.m[3][0] = 0, matrix.m[3][1] = 0, matrix.m[3][2] = 0, matrix.m[3][3] = 1
+                        );
+                }
             
-        }
-
-
-        //rotação em um eixo especifico
-        Matrix4x4 ratotion(double angle, char eixo){
-            double angle_r = angle * M_PI / 180.0;
-            double cos = std::cos(angle_r);
-            double sin = std::sin(angle_r);
-
-            Matrix4x4 matrix;
-            switch (eixo) {
-                case 'x':
-                    matrix.m[1][1] = cos;
-                    matrix.m[1][2] = -sin;
-                    matrix.m[2][1] = sin;
-                    matrix.m[2][2] = cos;
-                    break;
-                case 'y':
-                    matrix.m[0][0] = cos;
-                    matrix.m[0][2] = sin;
-                    matrix.m[2][0] = -sin;
-                    matrix.m[2][2] = cos;
-                    break;
-                case 'z':
-                    matrix.m[0][0] = cos;
-                    matrix.m[0][1] = -sin;
-                    matrix.m[1][0] = sin;
-                    matrix.m[1][1] = cos;
-                    break;
-                default:
-                    throw std::invalid_argument("invalido. use x, y, z.");
+               static Matrix4x4 scale_matrix(const double sx, double sy, double sz){
+                    Matrix4x4 matrix;
+                    return Matrix4x4(
+                        matrix.m[0][0] = sx, matrix.m[0][1] = 0, matrix.m[0][2] = 0, matrix.m[0][3] = 0,
+                        matrix.m[1][0] = 0, matrix.m[1][1] = sy, matrix.m[1][2] = 0, matrix.m[1][3] = 0,
+                        matrix.m[2][0] = 0, matrix.m[2][1] = 0, matrix.m[2][2] = sz, matrix.m[2][3] = 0,
+                        matrix.m[3][0] = 0, matrix.m[3][1] = 0, matrix.m[3][2] = 0, matrix.m[3][3] = 1
+                    );
+                }
             
+            
+              static  Matrix4x4 shear_x(const double s_yz, double s_zy){
+                    Matrix4x4 matrix;
+                    return Matrix4x4(
+                        matrix.m[0][0] = 1, matrix.m[0][1] = s_yz, matrix.m[0][2] = s_zy, matrix.m[0][3] = 0,
+                        matrix.m[1][0] = 0, matrix.m[1][1] = 1, matrix.m[1][2] = 0, matrix.m[1][3] = 0,
+                        matrix.m[2][0] = 0, matrix.m[2][1] = 0, matrix.m[2][2] = 1, matrix.m[2][3] = 0,
+                        matrix.m[3][0] = 0, matrix.m[3][1] = 0, matrix.m[3][2] = 0, matrix.m[3][3] = 1
+                    );
+                }
+            
+            
+            
+               static Matrix4x4 shear_y(const double s_xz, double s_zx) {
+                    Matrix4x4 matrix;
+                    return Matrix4x4(
+                        matrix.m[0][0] = 1, matrix.m[0][1] = 0, matrix.m[0][2] = 0, matrix.m[0][3] = 0,
+                        matrix.m[1][0] = s_xz, matrix.m[1][1] = 1, matrix.m[1][2] = s_zx, matrix.m[1][3] = 0,
+                        matrix.m[2][0] = 0, matrix.m[2][1] = 0, matrix.m[2][2] = 1, matrix.m[2][3] = 0,
+                        matrix.m[3][0] = 0, matrix.m[3][1] = 0, matrix.m[3][2] = 0, matrix.m[3][3] = 1
+                    );
+                }
+            
+               static Matrix4x4 shear_z(const double s_xy, double s_yx){
+                    Matrix4x4 matrix;
+                    return  Matrix4x4(
+                        matrix.m[0][0] = 1, matrix.m[0][1] = 0, matrix.m[0][2] = 0, matrix.m[0][3] = 0,
+                        matrix.m[1][0] = 0, matrix.m[1][1] = 1, matrix.m[1][2] = 0, matrix.m[1][3] = 0,
+                        matrix.m[2][0] = s_xy, matrix.m[2][1] = s_yx, matrix.m[2][2] = 1, matrix.m[2][3] = 0,
+                        matrix.m[3][0] = 0, matrix.m[3][1] = 0, matrix.m[3][2] = 0, matrix.m[3][3] = 1
+                    );
+                }
+            
+             static   Matrix4x4 shear_x_angle(const double angle){
+                    double s_yz = std::tan(angle);
+                    Matrix4x4 matrix;
+                    return Matrix4x4(
+                        matrix.m[0][0] = 1, matrix.m[0][1] = s_yz, matrix.m[0][2] = 0, matrix.m[0][3] = 0,
+                        matrix.m[1][0] = 0, matrix.m[1][1] = 1, matrix.m[1][2] = 0, matrix.m[1][3] = 0,
+                        matrix.m[2][0] = 0, matrix.m[2][1] = 0, matrix.m[2][2] = 1, matrix.m[2][3] = 0,
+                        matrix.m[3][0] = 0, matrix.m[3][1] = 0, matrix.m[3][2] = 0, matrix.m[3][3] = 1
+                    );
+                }
+            
+              static  Matrix4x4 shear_y_angle(const double angle){
+                    double angle_r = angle * M_PI / 180.0;
+                    double s_xz = std::tan(angle_r);
+                    Matrix4x4 matrix;
+                    return Matrix4x4(
+                        matrix.m[0][0] = 1, matrix.m[0][1] = 0, matrix.m[0][2] = 0, matrix.m[0][3] = 0,
+                        matrix.m[1][0] = s_xz, matrix.m[1][1] = 1, matrix.m[1][2] = 0, matrix.m[1][3] = 0,
+                        matrix.m[2][0] = 0, matrix.m[2][1] = 0, matrix.m[2][2] = 1, matrix.m[2][3] = 0,
+                        matrix.m[3][0] = 0, matrix.m[3][1] = 0, matrix.m[3][2] = 0, matrix.m[3][3] = 1
+                    );
+                }
+            
+            
+              static  Matrix4x4 shear_z_angle(const double angle){
+                    double angle_r = angle * M_PI / 180.0;
+                    double s_xy = std::tan(angle_r);
+                    Matrix4x4 matrix;
+                    return Matrix4x4(
+                        matrix.m[0][0] = 1, matrix.m[0][1] = 0, matrix.m[0][2] = 0, matrix.m[0][3] = 0,
+                        matrix.m[1][0] = 0, matrix.m[1][1] = 1, matrix.m[1][2] = 0, matrix.m[1][3] = 0,
+                        matrix.m[2][0] = s_xy, matrix.m[2][1] = 0, matrix.m[2][2] = 1, matrix.m[2][3] = 0,
+                        matrix.m[3][0] = 0, matrix.m[3][1] = 0, matrix.m[3][2] = 0, matrix.m[3][3] = 1
+                    );
+                    
+                }
+            
+            
+                //rotação em um eixo especifico
+                static Matrix4x4 ratotion(double angle, char eixo){
+                    double angle_r = angle * M_PI / 180.0;
+                    double cos = std::cos(angle_r);
+                    double sin = std::sin(angle_r);
+            
+                    Matrix4x4 matrix;
+                    switch (eixo) {
+                        case 'x':
+                            matrix.m[1][1] = cos;
+                            matrix.m[1][2] = -sin;
+                            matrix.m[2][1] = sin;
+                            matrix.m[2][2] = cos;
+                            break;
+                        case 'y':
+                            matrix.m[0][0] = cos;
+                            matrix.m[0][2] = sin;
+                            matrix.m[2][0] = -sin;
+                            matrix.m[2][2] = cos;
+                            break;
+                        case 'z':
+                            matrix.m[0][0] = cos;
+                            matrix.m[0][1] = -sin;
+                            matrix.m[1][0] = sin;
+                            matrix.m[1][1] = cos;
+                            break;
+                        default:
+                            throw std::invalid_argument("invalido. use x, y, z.");
+                    
+                    }
+                    return matrix;
+                }
+            
+            
+              static  Matrix4x4 rotation_arbitrary_axis(const Vec3& eixo, double angle){
+                    Vec3 eixo_normal = eixo.normalize();
+                    double x = eixo_normal.x;
+                    double y = eixo_normal.y;
+                    double z = eixo_normal.z;
+            
+                    double cos = std::cos(angle);
+                    double sin = std::sin(angle);
+                    double um_menos_cos = 1.0 - cos;
+                    Matrix4x4 matrix;
+            
+                    return Matrix4x4(
+                        matrix.m[0][0] = cos + x*x*um_menos_cos, matrix.m[0][1] = x*y*um_menos_cos - z*sin, matrix.m[0][2] = x*z*um_menos_cos + y*sin, matrix.m[0][3] = 0,
+            
+                        matrix.m[1][0] = y*x*um_menos_cos + z*sin, matrix.m[1][1] = cos + y*y/um_menos_cos, matrix.m[1][2] = y*z*um_menos_cos - x*sin, matrix.m[1][3] = 0,
+            
+                        matrix.m[2][0] = z*x*um_menos_cos - y*sin, matrix.m[2][1] = z*y*um_menos_cos + x*sin, matrix.m[2][2] = cos + z*z*um_menos_cos, matrix.m[2][3] = 0,
+            
+                        matrix.m[3][0] = 0, matrix.m[3][1] = 0, matrix.m[3][2] = 0, matrix.m[3][3] = 1
+                    );
+            
+                }
+            
+                //reflexão
+              static  Matrix4x4 mirror(char plano) {
+                    Matrix4x4 matrix;
+            
+                    switch (plano) {
+                    case 'x':
+                    case 'X':
+                        matrix.m[2][2] = -1; // espelho cortando o plano XY
+                        break;
+                    case 'y':
+                    case 'Y':
+                        matrix.m[0][0] = -1; // espelho cortando o plano YZ
+                        break;
+                    case 'z':
+                    case 'Z':
+                        matrix.m[1][1] = -1; // espelho cortando o plano XZ 
+                        break;
+                    default:
+                        throw std::invalid_argument("Invalido . Use x, y, z.");
+                    }
+            
+                    return matrix;
+                }
+            
+            
+            
+            // matrix necessaria para reflexão oeixo arbitrario
+          static  Matrix4x4 householder(const Vec3& pc, Vec3& vetor_normal){
+                Vec3 normal = vetor_normal.normalize();
+                double nor = vetor_normal.magnitude();
+                Matrix4x4 ind;
+                Matrix4x4 householder_matrix = ind.I();
+                Matrix4x4 n_nt;
+            
+                n_nt.m[0][0] = normal.x*normal.x;
+                n_nt.m[0][1] = normal.x*normal.y;
+                n_nt.m[0][2] = normal.x*normal.z;
+                n_nt.m[0][3] = 0;
+                n_nt.m[1][0] = normal.y*normal.x;
+                n_nt.m[1][1] = normal.y*normal.y;
+                n_nt.m[1][2] = normal.y*normal.z;
+                n_nt.m[1][3] = 0;
+                n_nt.m[2][0] = normal.z*normal.x;
+                n_nt.m[2][1] = normal.z*normal.y;
+                n_nt.m[2][2] = normal.z*normal.z;
+                n_nt.m[2][3] = 0;
+                n_nt.m[3][0] = 0;
+                n_nt.m[3][1] = 0;
+                n_nt.m[3][2] = 0;
+                n_nt.m[3][3] = 0;
+            
+                for (int i = 0; i < 4; i++) {
+                    for (int j = 0; j < 4; j++) {
+                        householder_matrix.m[i][j] -= 2.0 * n_nt.m[i][j] / (nor * nor);
+                    }
+                
+                }
+                Matrix4x4 matrix_reflection = translation(pc.x, pc.y, pc.z) * householder_matrix * translation(-pc.x, -pc.y, -pc.z);
+                return matrix_reflection;
             }
-            return matrix;
-        }
 
-
-        Matrix4x4 rotation_arbitrary_axis(const Vec3& eixo, double angle){
-            Vec3 eixo_normal = eixo.normalize();
-            double x = eixo_normal.x;
-            double y = eixo_normal.y;
-            double z = eixo_normal.z;
-
-            double cos = std::cos(angle);
-            double sin = std::sin(angle);
-            double um_menos_cos = 1.0 - cos;
-
-            return Matrix4x4(
-                m[0][0] = cos + x*x*um_menos_cos, m[0][1] = x*y*um_menos_cos - z*sin, m[0][2] = x*z*um_menos_cos + y*sin, m[0][3] = 0,
-
-                m[1][0] = y*x*um_menos_cos + z*sin, m[1][1] = cos + y*y/um_menos_cos, m[1][2] = y*z*um_menos_cos - x*sin, m[1][3] = 0,
-
-                m[2][0] = z*x*um_menos_cos - y*sin, m[2][1] = z*y*um_menos_cos + x*sin, m[2][2] = cos + z*z*um_menos_cos, m[2][3] = 0,
-
-                m[3][0] = 0, m[3][1] = 0, m[3][2] = 0, m[3][3] = 1
-            );
-
-        }
-
-        //reflexão
-        Matrix4x4 mirror(char plano) {
-            Matrix4x4 matrix;
-    
-            switch (plano) {
-            case 'x':
-            case 'X':
-                matrix.m[2][2] = -1; // espelho cortando o plano XY
-                break;
-            case 'y':
-            case 'Y':
-                matrix.m[0][0] = -1; // espelho cortando o plano YZ
-                break;
-            case 'z':
-            case 'Z':
-                matrix.m[1][1] = -1; // espelho cortando o plano XZ 
-                break;
-            default:
-                throw std::invalid_argument("Invalido . Use x, y, z.");
-            }
-    
-            return matrix;
-        }
-
-
-
-    // matrix necessaria para reflexão oeixo arbitrario
-    Matrix4x4 householder(const Vec3& pc, Vec3& vetor_normal){
-        Vec3 normal = vetor_normal.normalize();
-        double nor = vetor_normal.magnitude();
-        Matrix4x4 householder_matrix = I();
-        Matrix4x4 n_nt;
-
-        n_nt.m[0][0] = normal.x*normal.x;
-        n_nt.m[0][1] = normal.x*normal.y;
-        n_nt.m[0][2] = normal.x*normal.z;
-        n_nt.m[0][3] = 0;
-        n_nt.m[1][0] = normal.y*normal.x;
-        n_nt.m[1][1] = normal.y*normal.y;
-        n_nt.m[1][2] = normal.y*normal.z;
-        n_nt.m[1][3] = 0;
-        n_nt.m[2][0] = normal.z*normal.x;
-        n_nt.m[2][1] = normal.z*normal.y;
-        n_nt.m[2][2] = normal.z*normal.z;
-        n_nt.m[2][3] = 0;
-        n_nt.m[3][0] = 0;
-        n_nt.m[3][1] = 0;
-        n_nt.m[3][2] = 0;
-        n_nt.m[3][3] = 0;
-
-        for (int i = 0; i < 4; i++) {
-            for (int j = 0; j < 4; j++) {
-                householder_matrix.m[i][j] -= 2.0 * n_nt.m[i][j] / (nor * nor);
-            }
         
-        }
-        Matrix4x4 matrix_reflection = translation(pc.x, pc.y, pc.z) * householder_matrix * translation(-pc.x, -pc.y, -pc.z);
-        return matrix_reflection;
-    }
+        
+    
+    //   Vec4 operator=(Vec3& vetor){
+    //       return Vec4(vetor.x, vetor.y, vetor.z, 1.0);
+    //   }
+
+    // void transform( Vec3& vetor, Matrix4x4& transformation_matrix) {
+    //     Vec4 vetor4 = to_Vec4(vetor);
+    //     Vec4 t = transformation_matrix * vetor4;
+    //     vetor4.x = t.x;
+    //     vetor4.y = t.y;
+    //     vetor4.z = t.z;
+    // }
 
 };  
 #endif

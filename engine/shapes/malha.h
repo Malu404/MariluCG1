@@ -1,6 +1,8 @@
 #ifndef MALHA_H 
 #define MALHA_H
 
+#include "cilinder.h"
+#include "../../utils/matriz4x4.h"
 #include "shape.h"
 #include "triangulo.h"
 #include "../../utils/vec3.h"
@@ -19,6 +21,9 @@ public:
     std::vector<Vec3> vertices;
     std::vector<std::array<int, 3>> faces;
     std::vector<Triangle> triangles;
+    Vec3 centroid;
+    Vec3 min_point;
+    Vec3 max_point;
     
 
     Malha(const std::string& filepath, Material mat) : Shape(mat) {
@@ -106,7 +111,7 @@ public:
 
 
     
-    std::pair<Vec3, Vec3> calculate_bounding_box() {
+    void calculate_bounding_box() {
         Vec3 min_point = Vec3(INFINITY, INFINITY, INFINITY);
         Vec3 max_point = Vec3(-INFINITY, -INFINITY, -INFINITY);
         for (Vec3 vertex : vertices) {
@@ -118,8 +123,27 @@ public:
             max_point.y = max(vertex.y, max_point.y);
             max_point.z = max(vertex.z, max_point.z);
         }
-        return {min_point, max_point};
+        Vec3 bounding_box_max = max_point;
+        Vec3 bounding_box_min = min_point;
     }
+    void transform(Matrix4x4 m) {
+        for (size_t i = 0; i < vertices.size(); i++) {
+            vertices[i] = m * vertices[i];
+        }
+        calculate_bounding_box();
+    }
+
+    
+    
+
+    //  void apply_transform(const Matrix4x4& transformation_matrix) {
+    //     for (auto& vertex : vertices) {
+    //          vertex.transform(transformation_matrix);
+    //      }
+    //      centroid.transform(transformation_matrix);
+    //      // Recalcula a caixa delimitadora (bounding box)
+    //     std::tie(min_point, max_point) = calculate_bounding_box(vertices);
+    //  }
     
 };
 
