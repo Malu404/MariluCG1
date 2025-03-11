@@ -23,7 +23,7 @@
 using namespace std;
 
 int main() {
-    Vec3 p0 = Vec3(0,0,10);
+    Vec3 p0 = Vec3(0,15,10);
     
     double x_min = -2;
     double y_min = -2;
