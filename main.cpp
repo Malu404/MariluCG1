@@ -116,8 +116,8 @@ int main() {
     double cilinder_table_radius = 4.0; // Corrigido
     double cilinder_table_height = 10.0;
     Cilinder* cilinder_table_neck = new Cilinder(cilinder_center_table_neck, d_cil_table, cilinder_table_radius/4, cilinder_table_height, mat_cilindertable);
-    Cilinder* cilinder_table_topo = new Cilinder(cilinder_center_table_topo, d_cil_table, cilinder_table_radius*1.5, cilinder_table_height/5, mat_cilindertable);
-    Cilinder* cilinder_table_pé = new Cilinder(cilinder_center_table_pé, d_cil_table, cilinder_table_radius/1.5, cilinder_table_height/10, mat_cilindertable);
+    Cilinder* cilinder_table_topo = new Cilinder(cilinder_center_table_topo, d_cil_table, cilinder_table_radius*1.5, cilinder_table_height/20, mat_cilindertable);
+    Cilinder* cilinder_table_pé = new Cilinder(cilinder_center_table_pé, d_cil_table, cilinder_table_radius/1.5, cilinder_table_height/15, mat_cilindertable);
     // Cone
 
     Vec3 cone_base_center = Vec3(0.0, 0.0, -10.0); // Set the cone base center position
