@@ -171,83 +171,7 @@ int main() {
    
     Canvas canvas = Canvas(p0, x_min, y_min, x_max, y_max, d1, cols1, rows1, bg_color);
     
-    // // Criação do cone
-    // Cone* cone = new Cone(cilinder_center, cilinder_center + d_cil * cilinder_height, cilinder_radius, mat_cone);
-
-// Rotacionar o cone
-// Vec3 rotation_axis = Vec3(0, 1, 0);
-// double rotation_angle = 45.0;
-// Matrix4x4 rotation_matrix = Matrix4x4::rotation_arbitrary_axis(rotation_axis, rotation_angle);
-// cilinder->center = rotation_matrix * cilinder->center;
-// cilinder->direction = rotation_matrix * cilinder->direction;
-
-// // Atualiza o top_center após a rotação
-// Vec3 top_center = cilinder->center + cilinder->direction * cilinder->height;
-
-
-
-// Vec3 translation_vector = Vec3(5, 0, 0); // Move 5 unidades no eixo X
-// Matrix4x4 translation_matrix = Matrix4x4::translation(translation_vector.x, translation_vector.y, translation_vector.z);
-// cilinder->center = translation_matrix * cilinder->center;
-    
-// Vec3 translation_vector = -cilinder->center;
-
-// // Crie a matriz de translação
-// Matrix4x4 translation_matrix = Matrix4x4::translation(translation_vector.x, translation_vector.y, translation_vector.z);
-
-// // Aplique a translação ao center do cilindro
-// cilinder->center = translation_matrix * cilinder->center;
-
-// // Atualize o top_center após a translação
-// Vec3 top_center = cilinder->center + cilinder->direction * cilinder->height;
-
-// std::cout << "Novo centro do cilindro: (" << cilinder->center.x << ", " << cilinder->center.y << ", " << cilinder->center.z << ")" << std::endl;
-
-
-
-// Vec3 translation_vector = -cilinder->center;
-// Matrix4x4 translation_matrix = Matrix4x4::translation(translation_vector.x, translation_vector.y, translation_vector.z);
-// cilinder->center = translation_matrix * cilinder->center;
-
-// // 2. Aplicar a rotação (45 graus em torno do eixo Y)
-// Vec3 rotation_axis = Vec3(0, 0, 1);
-//  double rotation_angle = 45.0;
-//  Matrix4x4 rotation_matrix = Matrix4x4::rotation_arbitrary_axis(rotation_axis, rotation_angle);
-// cilinder->center = rotation_matrix * cilinder->center;
-// cilinder->direction = rotation_matrix * cilinder->direction; // Rotaciona a direção do cilindro
-
-// // 3. Transladar de volta para a posição original
-// Matrix4x4 inverse_translation_matrix = Matrix4x4::translation(-translation_vector.x, -translation_vector.y, -translation_vector.z);
-// cilinder->center = inverse_translation_matrix * cilinder->center;
-
-// // Atualize o top_center após a rotação e translação
-// Vec3 top_center = cilinder->center + cilinder->direction * cilinder->height;
-
-// // Verifique o resultado
-// std::cout << "Novo centro do cilindro: (" << cilinder->center.x << ", " << cilinder->center.y << ", " << cilinder->center.z << ")" << std::endl;
-// std::cout << "Nova direção do cilindro: (" << cilinder->direction.x << ", " << cilinder->direction.y << ", " << cilinder->direction.z << ")" << std::endl;
-
-
-
-
-
-// // Cria uma matriz de transformação (exemplo: escala 2x em x, y, z)
-// Matrix4x4 scaleMatrix = Matrix4x4::scale_matrix(0.5, 0.5, 0.5);
-
-// // Aplica a transformação à malha
-// malha->transform(scaleMatrix);
-
-// // Ou usando apply_transform
-// malha->apply_transform(scaleMatrix);
-// Cria uma matriz de transformação (exemplo: escala 2x em X, Y, Z)
-
-
-// Matrix4x4 scale_matrix = Matrix4x4::scale_matrix(2.0, 2.0, 2.0);
-
-// // Aplica a transformação aos objetos
-// cilinder->transform(scale_matrix);
-// cone->transform(scale_matrix);
-
+   
     
     
     
@@ -258,9 +182,13 @@ int main() {
     scene.add_object(plane2);
     scene.add_object(cone);
     //scene.add_object(malha);
-    scene.add_light(spot_light);
+    //scene.add_light(spot_light);
     //scene.add_light(light);
-    
+    scene.add_object(cilinder_ch1);
+    scene.add_object(cilinder_ch2);
+
+
+
     // SDL init
     if (SDL_Init(SDL_INIT_VIDEO) != 0) { printf("SDL_Init Error: %s\n", SDL_GetError()); return 1; }
     SDL_Window* window = SDL_CreateWindow("Hello SDL", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, image_width, image_height, 0);
