@@ -1,6 +1,6 @@
 #ifndef CANVAS_H
 #define CANVAS_H
-
+#include "shapes/sphere.h"
 #include <SDL_render.h>
 #include "scene.h"
 #include "ray.h"
@@ -39,11 +39,23 @@ class Canvas {
 
                     // se ele não estiver atrás da câmera, calcula aS luzes (mas testa pra sombra antes né etc.)
                     if (t > 0.0) {
-                        Vec3 p_intersect = r.at(t); // Ponto de interseção do raio com o objeto
+                        Vec3 p_intersect = r.at(t); // Ponto de interseção do raio com o objeto                    
                         Vec3 ieye = Vec3(0.0, 0.0, 0.0);
-                        Vec3 iamb = closest_shape->mat.k_ambient * scene.ambient_light;
+
+                        // --- Início das modificações ---
+                        Vec3 k_ambient = closest_shape->mat.k_ambient;
+                        Vec3 k_diffuse = closest_shape->mat.k_diffuse;
+
+                        Sphere* sphere_ptr = dynamic_cast<Sphere*>(closest_shape);
+                        if (sphere_ptr && sphere_ptr->texture) {
+                            auto [u, v] = sphere_ptr->get_uv(p_intersect);
+                            Vec3 tex_color = sphere_ptr->texture->sample(u, v);
+                            k_ambient = tex_color;
+                            k_diffuse = tex_color;
+                        }
+
+                        Vec3 iamb = k_ambient * scene.ambient_light;
                         ieye = ieye + iamb;
-                        
                         // Testa todas as luzes da cena
                         for (Light light : scene.lights) {
                             // Check da sombra

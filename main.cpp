@@ -3,6 +3,7 @@
 #include <cmath>
 #include <chrono>
 #include <SDL.h>
+#include <SDL_image.h>
 
 #include "utils/vec4.h"
 #include "utils/matriz4x4.h"
@@ -17,7 +18,8 @@
 #include "engine/shapes/cilinder.h"
 #include "engine/shapes/cone.h"
 #include "engine/shapes/malha.h"
-
+#include "engine/shapes/textura.h"
+#include "engine/shapes/textura.cpp"
 using namespace std;
 
 int main() {
@@ -31,35 +33,16 @@ int main() {
     double cols1 = 600;
     double rows1 = 600;
     double aspect_ratio = 1;
-
-    //double viewport_width = 3.2; 
-    //double viewport_height = viewport_width/aspect_ratio;
-    //double viewport_distance = 1.0;
     int image_width = 600;
     int image_height = image_width/aspect_ratio;
 
-
-
-    //double sphere_radius = 4.0;
-    //double cilinder_radius = std::trunc(sphere_radius / 3.0); // Corrigido
-    //double cilinder_height = sphere_radius *3.0;
-    //double cone_radius = 4.0; // Set the cone radius
-    //double cone_height = 12.0; // Set the cone height
-
-
-    //;//esfera centro posição
-
-    //Vec3 d_cil = Vec3(-1/sqrt(3), 1/sqrt(3), -1/sqrt(3));//direção cilindro
-    //Vec3 cilinder_center = Vec3(0.0, 0.0, -5.0);//cilindro centro posição
-
-    //Vec3 cone_base_center = Vec3(0.0, 0.0, -20.0); // Set the cone base center position
-    //Vec3 cone_top_vertex = Vec3(0.0, 0.0 , -10.0); // Set the cone top vertex position
-
-    //Vec3 plane_p0 = Vec3(0.0, -5.0, 0.0); // Green plane
-    //Vec3 plane_normal = Vec3(0.0, 1.0, 0.0);
-    //Vec3 plane2_p0 = Vec3(0.0, 0.0, -30.0); // Blue plane
-    //Vec3 plane2_normal = Vec3(0.0, 0.0, 1.0);
-    
+    //inicializa minha textura usando sdl_image
+    if (!(IMG_Init(IMG_INIT_PNG) & IMG_INIT_PNG)) {
+        printf("SDL_image could not initialize! Error: %s\n", IMG_GetError());
+        return 1;
+    }
+    Texture beach_ball = Texture("beach_ball.png");
+    Texture pokemon = Texture("mantas-de-pokemon.png");
     Material mat_malha = Material(
         Vec3(0.8, 0.2, 0.8),   // Cor ambiente (vermelho)
         Vec3(0.8, 0.2, 0.8),   // Cor difusa
@@ -68,17 +51,17 @@ int main() {
     );
     
     Vec3 bg_color = Vec3(0.0, 0.0, 0.0);
-     Material mat_sphere = Material(
-        Vec3(0.7, 0.2, 0.2),
-        Vec3(0.7, 0.2, 0.2),
-        Vec3(0.7, 0.2, 0.2),
-        10.0
+    Material mat_sphere = Material(
+        Vec3(1, 1, 1), //luz ambiente
+        Vec3(1, 1, 1), // luz difusa
+        Vec3(0.7, 0.7, 0.7), // luz especular
+        100.0//o quao refletivo éo meu material
     );
     Material mat_cilinder = Material(
         Vec3(0.2, 0.3, 0.8), //ambiente
         Vec3(0.2, 0.3, 0.8), //difuso
         Vec3(0.2, 0.3, 0.8),// especular
-        1.0
+        100.0
     );
     Material mat_cone = Material(
         Vec3(0.8, 0.3, 0.2), // Ambient
@@ -102,7 +85,7 @@ int main() {
     double sphere_radius = 4.0;
     Vec3 sphere_center = Vec3(0.0, 0, -13.0);
 
-    Sphere* sphere = new Sphere(sphere_center, sphere_radius, mat_sphere);
+    Sphere* sphere = new Sphere(sphere_center, sphere_radius, mat_sphere, &pokemon);
 
     Vec3 plane_p0 = Vec3(0.0, -5.0, 0.0); // Green plane
     Vec3 plane_normal = Vec3(0.0, 1.0, 0.0);
@@ -218,13 +201,11 @@ std::cout << "Nova direção do cilindro: (" << cilinder->direction.x << ", " <<
     
     
     Scene scene = Scene(ambient_light);
-    // scene.add_object(sphere);
-    scene.add_object(cilinder);
+    scene.add_object(sphere);
+    //scene.add_object(cilinder);
     scene.add_object(plane);
     scene.add_object(plane2);
-    scene.add_object(cone);
-    //scene.add_object(cilinder2);
-    //scene.add_object(cilinder3);
+    //scene.add_object(cone);
     //scene.add_object(malha);
 
     scene.add_light(light);

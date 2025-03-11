@@ -1,3 +1,3 @@
 echo off
-g++ -O3 -std=c++17 -march=native main.cpp -IC:/SDL2/include -LC:/SDL2/lib -lSDL2 -lmingw32 -lSDL2main -D_REENTRANT -o main.exe
-main.exe
+g++ -O3 -march=native -ISDL2/include -D_REENTRANT -o cg1.exe main.cpp  -LSDL2/lib -lSDL2 -lSDL2_image
+cg1.exe
