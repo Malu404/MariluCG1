@@ -31,18 +31,14 @@ class Canvas {
                     Ray r = Ray(pos, dr_normalized); // nosso raio
 
                     // pega o objeto mais próximo na cena
-
                     auto [closest_shape, t] = scene.get_closest_object(r);
-                    // auto closest_shape_and_t = scene.get_closest_object(r);
-                    // auto& closest_shape = std::get<0>(closest_shape_and_t);
-                    // auto& t = std::get<1>(closest_shape_and_t);
 
                     // se ele não estiver atrás da câmera, calcula aS luzes (mas testa pra sombra antes né etc.)
                     if (t > 0.0) {
                         Vec3 p_intersect = r.at(t); // Ponto de interseção do raio com o objeto                    
                         Vec3 ieye = Vec3(0.0, 0.0, 0.0);
 
-                        // --- Início das modificações ---
+                        
                         Vec3 k_ambient = closest_shape->mat.k_ambient;
                         Vec3 k_diffuse = closest_shape->mat.k_diffuse;
 
@@ -57,7 +53,7 @@ class Canvas {
                         Vec3 iamb = k_ambient * scene.ambient_light;
                         ieye = ieye + iamb;
                         // Testa todas as luzes da cena
-                        for (Light light : scene.lights) {
+                        /*for (Light light : scene.lights) {
                             // Check da sombra
                             bool na_sombra = false;
                             // Raio do ponto de interseção até a luz (não normaliza o vetor direção)
@@ -87,6 +83,37 @@ class Canvas {
 
                             Vec3 idif = closest_shape->mat.k_diffuse * nl * light.color;
                             Vec3 iesp = closest_shape->mat.k_specular * pow(rv, closest_shape->mat.e) * light.color;
+
+                            ieye = ieye + idif + iesp;
+                        }*/
+                        for (Light light : scene.lights) {
+                            bool na_sombra = false;
+                            Ray raio_p_luz = Ray(p_intersect, light.pos - p_intersect);
+                            
+                            // Teste de sombra
+                            for (Shape* s_test : scene.objects) {
+                                double distance = s_test->intersects(raio_p_luz);
+                                if (distance >= 0.0001 && distance <= 1.0) {
+                                    na_sombra = true;
+                                    break;
+                                }
+                            }
+
+                            Vec3 l = (light.pos - p_intersect).normalize();
+                            Vec3 n = closest_shape->get_normal(p_intersect);
+                            Vec3 r = (2.0 * (l.dot(n)))*n - l;
+                            Vec3 v = -dr_normalized;
+
+                            double nl = n.dot(l);
+                            double rv = r.dot(v);
+                            if (nl < 0.0 || na_sombra) nl = 0.0;
+                            if (rv < 0.0 || na_sombra) rv = 0.0;
+
+                            // Cálculo da atenuação do spot
+                            float spot_attenuation = light.spot_factor(p_intersect);
+                            
+                            Vec3 idif = k_diffuse * nl * light.color * light.intensity * spot_attenuation;
+                            Vec3 iesp = closest_shape->mat.k_specular * pow(rv, closest_shape->mat.e) * light.color * light.intensity * spot_attenuation;
 
                             ieye = ieye + idif + iesp;
                         }

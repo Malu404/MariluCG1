@@ -55,9 +55,15 @@ int main() {
         Vec3(1, 1, 1), //luz ambiente
         Vec3(1, 1, 1), // luz difusa
         Vec3(0.7, 0.7, 0.7), // luz especular
-        100.0//o quao refletivo éo meu material
+        10000000.0//o quao refletivo éo meu material
     );
     Material mat_cilinder = Material(
+        Vec3(0.2, 0.3, 0.8), //ambiente
+        Vec3(0.2, 0.3, 0.8), //difuso
+        Vec3(0.2, 0.3, 0.8),// especular
+        100.0
+    );
+    Material mat_cilinderchair = Material(
         Vec3(0.2, 0.3, 0.8), //ambiente
         Vec3(0.2, 0.3, 0.8), //difuso
         Vec3(0.2, 0.3, 0.8),// especular
@@ -121,6 +127,20 @@ int main() {
     double cilinder_height = 10.0;
     Cilinder* cilinder = new Cilinder(cilinder_center, d_cil, cilinder_radius, cilinder_height, mat_cilinder);
 
+    // cilindro da cadeira
+    Vec3 cilinder_center_chair = Vec3(0.0, 0, 0);
+    Vec3 d_cil_chair = Vec3(0, 1, 0);
+    double cilinder_chair_radius = 4.0; // Corrigido
+    double cilinder_chair_height = 10.0;
+    Cilinder* cilinder_ch1 = new Cilinder(cilinder_center_chair, d_cil_chair, cilinder_chair_radius, cilinder_chair_height, mat_cilinderchair);
+    Cilinder* cilinder_ch2 = new Cilinder(cilinder_center_chair, d_cil_chair, cilinder_chair_radius, cilinder_chair_height, mat_cilinderchair);
+    Cilinder* cilinder_ch3 = new Cilinder(cilinder_center_chair, d_cil_chair, cilinder_chair_radius, cilinder_chair_height, mat_cilinderchair);
+    Cilinder* cilinder_ch4 = new Cilinder(cilinder_center_chair, d_cil_chair, cilinder_chair_radius, cilinder_chair_height, mat_cilinderchair);
+    Cilinder* cilinder_ch5 = new Cilinder(cilinder_center_chair, d_cil_chair, cilinder_chair_radius, cilinder_chair_height, mat_cilinderchair);     
+    Cilinder* cilinder_ch6 = new Cilinder(cilinder_center_chair, d_cil_chair, cilinder_chair_radius, cilinder_chair_height, mat_cilinderchair);
+    Cilinder* cilinder_ch7 = new Cilinder(cilinder_center_chair, d_cil_chair, cilinder_chair_radius, cilinder_chair_height, mat_cilinderchair);
+    // Cone
+
     Vec3 cone_base_center = Vec3(0.0, 0.0, -10.0); // Set the cone base center position
     Vec3 cone_top_vertex = Vec3(0.0, 10.0 , -10.0); // Set the cone top vertex position
     double cone_radius = 4.0; // Set the cone radius
@@ -140,7 +160,15 @@ int main() {
 
 
     Vec3 ambient_light = Vec3(0.3, 0.3, 0.3);
-    
+    Light spot_light = Light(
+        Vec3(0, 8, 10),       // Posição
+        Vec3(0, -1, -2),       // Direção
+        Vec3(1, 1, 1),        // Cor
+        1.5f,                 // Intensidade
+        30.0,                 // Ângulo (graus)
+        8.0                   // Expoente de suavização
+    );
+   
     Canvas canvas = Canvas(p0, x_min, y_min, x_max, y_max, d1, cols1, rows1, bg_color);
     
     // // Criação do cone
@@ -230,8 +258,8 @@ int main() {
     scene.add_object(plane2);
     scene.add_object(cone);
     //scene.add_object(malha);
-
-    scene.add_light(light);
+    scene.add_light(spot_light);
+    //scene.add_light(light);
     
     // SDL init
     if (SDL_Init(SDL_INIT_VIDEO) != 0) { printf("SDL_Init Error: %s\n", SDL_GetError()); return 1; }
