@@ -188,26 +188,27 @@ int main() {
 
 
 
-// Vec3 translation_vector = -cilinder->center;
-// Matrix4x4 translation_matrix = Matrix4x4::translation(translation_vector.x, translation_vector.y, translation_vector.z);
-// cilinder->center = translation_matrix * cilinder->center;
+Vec3 translation_vector = -cilinder->center;
+Matrix4x4 translation_matrix = Matrix4x4::translation(translation_vector.x, translation_vector.y, translation_vector.z);
+cilinder->center = translation_matrix * cilinder->center;
 
-// // 2. Aplicar a rotação (45 graus em torno do eixo Y)
-// double rotation_angle = 45.0; // Ângulo de rotação em graus
-// Matrix4x4 rotation_matrix = Matrix4x4::rotation(rotation_angle, 'x');
-// cilinder->center = rotation_matrix * cilinder->center;
-// cilinder->direction = rotation_matrix * cilinder->direction; // Rotaciona a direção do cilindro
+// 2. Aplicar a rotação (45 graus em torno do eixo Y)
+Vec3 rotation_axis = Vec3(0, 0, 1);
+ double rotation_angle = 45.0;
+ Matrix4x4 rotation_matrix = Matrix4x4::rotation_arbitrary_axis(rotation_axis, rotation_angle);
+cilinder->center = rotation_matrix * cilinder->center;
+cilinder->direction = rotation_matrix * cilinder->direction; // Rotaciona a direção do cilindro
 
-// // 3. Transladar de volta para a posição original
-// Matrix4x4 inverse_translation_matrix = Matrix4x4::translation(-translation_vector.x, -translation_vector.y, -translation_vector.z);
-// cilinder->center = inverse_translation_matrix * cilinder->center;
+// 3. Transladar de volta para a posição original
+Matrix4x4 inverse_translation_matrix = Matrix4x4::translation(-translation_vector.x, -translation_vector.y, -translation_vector.z);
+cilinder->center = inverse_translation_matrix * cilinder->center;
 
-// // Atualize o top_center após a rotação e translação
-// Vec3 top_center = cilinder->center + cilinder->direction * cilinder->height;
+// Atualize o top_center após a rotação e translação
+Vec3 top_center = cilinder->center + cilinder->direction * cilinder->height;
 
-// // Verifique o resultado
-// std::cout << "Novo centro do cilindro: (" << cilinder->center.x << ", " << cilinder->center.y << ", " << cilinder->center.z << ")" << std::endl;
-// std::cout << "Nova direção do cilindro: (" << cilinder->direction.x << ", " << cilinder->direction.y << ", " << cilinder->direction.z << ")" << std::endl;
+// Verifique o resultado
+std::cout << "Novo centro do cilindro: (" << cilinder->center.x << ", " << cilinder->center.y << ", " << cilinder->center.z << ")" << std::endl;
+std::cout << "Nova direção do cilindro: (" << cilinder->direction.x << ", " << cilinder->direction.y << ", " << cilinder->direction.z << ")" << std::endl;
 
 
 

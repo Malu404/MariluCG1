@@ -20,7 +20,9 @@ class Matrix4x4 {
 
         //conztrutor matriz identidade
 
-        Matrix4x4() { I();}
+        Matrix4x4() {
+            *this = I();
+        }
 
         //matrix identidade
         static Matrix4x4 I() {
@@ -70,18 +72,19 @@ class Matrix4x4 {
         Matrix4x4 operator+(const Matrix4x4& other)
             const { return Matrix4x4(
                 m[0][0] + other.m[0][0], m[0][1] + other.m[0][1], m[0][2] + other.m[0][2], m[0][3] + other.m[0][3],
-                m[1][0] + other.m[1][0], m[1][1] + other.m[1][1], m[1][2] + other.m[1][1], m[1][3] + other.m[1][3], 
+                m[1][0] + other.m[1][0], m[1][1] + other.m[1][1], m[1][2] + other.m[1][2], m[1][3] + other.m[1][3], 
                 m[2][0] + other.m[2][0], m[2][1] + other.m[2][1], m[2][2] + other.m[2][2], m[2][3] + other.m[2][3], 
                 m[3][0] + other.m[3][0], m[3][1] + other.m[3][1], m[3][2] + other.m[3][2], m[3][3] + other.m[3][3]); }
         
         //matriz - matriz
-        Matrix4x4 operator-(const Matrix4x4& other)
-                const { return Matrix4x4(
+        Matrix4x4 operator-(const Matrix4x4& other) const {
+            return Matrix4x4(
                 m[0][0] - other.m[0][0], m[0][1] - other.m[0][1], m[0][2] - other.m[0][2], m[0][3] - other.m[0][3],
-                m[1][0] - other.m[1][0], m[1][1] - other.m[1][1], m[1][2] - other.m[1][1], m[1][3] - other.m[1][3], 
-                m[2][0] - other.m[2][0], m[2][1] - other.m[2][1], m[2][2] - other.m[2][2], m[2][3] - other.m[2][3], 
+                m[1][0] - other.m[1][0], m[1][1] - other.m[1][1], m[1][2] - other.m[1][2], m[1][3] - other.m[1][3],
+                m[2][0] - other.m[2][0], m[2][1] - other.m[2][1], m[2][2] - other.m[2][2], m[2][3] - other.m[2][3],
                 m[3][0] - other.m[3][0], m[3][1] - other.m[3][1], m[3][2] - other.m[3][2], m[3][3] - other.m[3][3]
-                ); }
+            );
+        }
 
         
         //matriz * matriz
@@ -149,12 +152,15 @@ class Matrix4x4 {
 
 
                 //divisão matrix por escalar
-        Matrix4x4 operator/(const double other) const {
+                Matrix4x4 operator/(const double other) const {
+                    if (other == 0.0) {
+                        throw std::invalid_argument("Divisão por zero não é permitida.");
+                    }
                     return Matrix4x4(
-                    m[0][0] / other, m[0][1] / other, m[0][2] / other, m[0][3] / other,
-                    m[1][0] / other, m[1][1] / other, m[1][2] / other, m[1][3] / other,
-                    m[2][0] / other, m[2][1] / other, m[2][2] / other, m[2][3] / other,
-                    m[3][0] / other, m[3][1] / other, m[3][2] / other, m[3][3] / other
+                        m[0][0] / other, m[0][1] / other, m[0][2] / other, m[0][3] / other,
+                        m[1][0] / other, m[1][1] / other, m[1][2] / other, m[1][3] / other,
+                        m[2][0] / other, m[2][1] / other, m[2][2] / other, m[2][3] / other,
+                        m[3][0] / other, m[3][1] / other, m[3][2] / other, m[3][3] / other
                     );
                 }
 
@@ -425,10 +431,10 @@ class Matrix4x4 {
                 double um_menos_cos = 1.0 - cos;
             
                 return Matrix4x4(
-                    cos + x * x * um_menos_cos, x * y * um_menos_cos - z * sin, x * z * um_menos_cos + y * sin, 0,  // Linha 0
-                    y * x * um_menos_cos + z * sin, cos + y * y * um_menos_cos, y * z * um_menos_cos - x * sin, 0,  // Linha 1
-                    z * x * um_menos_cos - y * sin, z * y * um_menos_cos + x * sin, cos + z * z * um_menos_cos, 0,  // Linha 2
-                    0, 0, 0, 1  // Linha 3
+                    cos + x * x * um_menos_cos, x * y * um_menos_cos - z * sin, x * z * um_menos_cos + y * sin, 0,
+                    y * x * um_menos_cos + z * sin, cos + y * y * um_menos_cos, y * z * um_menos_cos - x * sin, 0,
+                    z * x * um_menos_cos - y * sin, z * y * um_menos_cos + x * sin, cos + z * z * um_menos_cos, 0,
+                    0, 0, 0, 1
                 );
             }
             

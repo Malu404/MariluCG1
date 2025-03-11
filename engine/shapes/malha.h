@@ -126,12 +126,12 @@ public:
         Vec3 bounding_box_max = max_point;
         Vec3 bounding_box_min = min_point;
     }
-    void transform(Matrix4x4 m) {
-        for (size_t i = 0; i < vertices.size(); i++) {
-            vertices[i] = m * vertices[i];
-        }
-        calculate_bounding_box();
-    }
+    // void transform(Matrix4x4 m) {
+    //     for (size_t i = 0; i < vertices.size(); i++) {
+    //         vertices[i] = m * vertices[i];
+    //     }
+    //     calculate_bounding_box();
+    // }
 
     
     
