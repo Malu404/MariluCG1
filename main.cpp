@@ -29,7 +29,7 @@ int main() {
     double y_min = -2;
     double x_max = 2;
     double y_max = 2;
-    double d1 = -2;
+    double d1 = -1;
     double cols1 = 600;
     double rows1 = 600;
     double aspect_ratio = 1;
@@ -63,7 +63,7 @@ int main() {
         Vec3(0.2, 0.3, 0.8),// especular
         100.0
     );
-    Material mat_cilinderchair = Material(
+    Material mat_cilindertable = Material(
         Vec3(0.2, 0.3, 0.8), //ambiente
         Vec3(0.2, 0.3, 0.8), //difuso
         Vec3(0.2, 0.3, 0.8),// especular
@@ -127,18 +127,19 @@ int main() {
     double cilinder_height = 10.0;
     Cilinder* cilinder = new Cilinder(cilinder_center, d_cil, cilinder_radius, cilinder_height, mat_cilinder);
 
-    // cilindro da cadeira
-    Vec3 cilinder_center_chair = Vec3(0.0, 0, 0);
-    Vec3 d_cil_chair = Vec3(0, 1, 0);
-    double cilinder_chair_radius = 4.0; // Corrigido
-    double cilinder_chair_height = 10.0;
-    Cilinder* cilinder_ch1 = new Cilinder(cilinder_center_chair, d_cil_chair, cilinder_chair_radius, cilinder_chair_height, mat_cilinderchair);
-    Cilinder* cilinder_ch2 = new Cilinder(cilinder_center_chair, d_cil_chair, cilinder_chair_radius, cilinder_chair_height, mat_cilinderchair);
-    Cilinder* cilinder_ch3 = new Cilinder(cilinder_center_chair, d_cil_chair, cilinder_chair_radius, cilinder_chair_height, mat_cilinderchair);
-    Cilinder* cilinder_ch4 = new Cilinder(cilinder_center_chair, d_cil_chair, cilinder_chair_radius, cilinder_chair_height, mat_cilinderchair);
-    Cilinder* cilinder_ch5 = new Cilinder(cilinder_center_chair, d_cil_chair, cilinder_chair_radius, cilinder_chair_height, mat_cilinderchair);     
-    Cilinder* cilinder_ch6 = new Cilinder(cilinder_center_chair, d_cil_chair, cilinder_chair_radius, cilinder_chair_height, mat_cilinderchair);
-    Cilinder* cilinder_ch7 = new Cilinder(cilinder_center_chair, d_cil_chair, cilinder_chair_radius, cilinder_chair_height, mat_cilinderchair);
+    // cilindro da mesa
+    double x_table = 0;
+    double y_table = 0;
+    double z_table = 0;
+    Vec3 cilinder_center_table_neck = Vec3(x_table, y_table+1, z_table);
+    Vec3 cilinder_center_table_topo = Vec3(x_table, y_table+10, z_table);
+    Vec3 cilinder_center_table_pé = Vec3(x_table, y_table, z_table);
+    Vec3 d_cil_table = Vec3(0, 1, 0);
+    double cilinder_table_radius = 4.0; // Corrigido
+    double cilinder_table_height = 10.0;
+    Cilinder* cilinder_table_neck = new Cilinder(cilinder_center_table_neck, d_cil_table, cilinder_table_radius/4, cilinder_table_height, mat_cilindertable);
+    Cilinder* cilinder_table_topo = new Cilinder(cilinder_center_table_topo, d_cil_table, cilinder_table_radius*1.5, cilinder_table_height/5, mat_cilindertable);
+    Cilinder* cilinder_table_pé = new Cilinder(cilinder_center_table_pé, d_cil_table, cilinder_table_radius/1.5, cilinder_table_height/10, mat_cilindertable);
     // Cone
 
     Vec3 cone_base_center = Vec3(0.0, 0.0, -10.0); // Set the cone base center position
@@ -176,19 +177,17 @@ int main() {
     
     
     Scene scene = Scene(ambient_light);
-    scene.add_object(sphere);
-    scene.add_object(cilinder);
+    //scene.add_object(sphere);
+    //scene.add_object(cilinder);
     scene.add_object(plane);
     scene.add_object(plane2);
     scene.add_object(cone);
     //scene.add_object(malha);
     //scene.add_light(spot_light);
-    //scene.add_light(light);
-    scene.add_object(cilinder_ch1);
-    scene.add_object(cilinder_ch2);
-
-
-
+    scene.add_light(light);
+    scene.add_object(cilinder_table_neck);
+    scene.add_object(cilinder_table_topo);
+    scene.add_object(cilinder_table_pé);
     // SDL init
     if (SDL_Init(SDL_INIT_VIDEO) != 0) { printf("SDL_Init Error: %s\n", SDL_GetError()); return 1; }
     SDL_Window* window = SDL_CreateWindow("Hello SDL", SDL_WINDOWPOS_CENTERED, SDL_WINDOWPOS_CENTERED, image_width, image_height, 0);
