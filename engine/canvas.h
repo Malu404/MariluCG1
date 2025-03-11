@@ -38,7 +38,7 @@ class Canvas {
                         Vec3 p_intersect = r.at(t); // Ponto de interseção do raio com o objeto                    
                         Vec3 ieye = Vec3(0.0, 0.0, 0.0);
 
-                        // --- Início das modificações ---
+                        
                         Vec3 k_ambient = closest_shape->mat.k_ambient;
                         Vec3 k_diffuse = closest_shape->mat.k_diffuse;
 

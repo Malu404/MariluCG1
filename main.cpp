@@ -53,9 +53,15 @@ int main() {
         Vec3(1, 1, 1), //luz ambiente
         Vec3(1, 1, 1), // luz difusa
         Vec3(0.7, 0.7, 0.7), // luz especular
-        100.0//o quao refletivo éo meu material
+        10000000.0//o quao refletivo éo meu material
     );
     Material mat_cilinder = Material(
+        Vec3(0.2, 0.3, 0.8), //ambiente
+        Vec3(0.2, 0.3, 0.8), //difuso
+        Vec3(0.2, 0.3, 0.8),// especular
+        100.0
+    );
+    Material mat_cilinderchair = Material(
         Vec3(0.2, 0.3, 0.8), //ambiente
         Vec3(0.2, 0.3, 0.8), //difuso
         Vec3(0.2, 0.3, 0.8),// especular
@@ -98,6 +104,20 @@ int main() {
     double cilinder_radius = 4.0; // Corrigido
     double cilinder_height = 10.0;
     Cilinder* cilinder = new Cilinder(cilinder_center, d_cil, cilinder_radius, cilinder_height, mat_cilinder);
+
+    // cilindro da cadeira
+    Vec3 cilinder_center_chair = Vec3(0.0, 0, 0);
+    Vec3 d_cil_chair = Vec3(0, 1, 0);
+    double cilinder_chair_radius = 4.0; // Corrigido
+    double cilinder_chair_height = 10.0;
+    Cilinder* cilinder_ch1 = new Cilinder(cilinder_center_chair, d_cil_chair, cilinder_chair_radius, cilinder_chair_height, mat_cilinderchair);
+    Cilinder* cilinder_ch2 = new Cilinder(cilinder_center_chair, d_cil_chair, cilinder_chair_radius, cilinder_chair_height, mat_cilinderchair);
+    Cilinder* cilinder_ch3 = new Cilinder(cilinder_center_chair, d_cil_chair, cilinder_chair_radius, cilinder_chair_height, mat_cilinderchair);
+    Cilinder* cilinder_ch4 = new Cilinder(cilinder_center_chair, d_cil_chair, cilinder_chair_radius, cilinder_chair_height, mat_cilinderchair);
+    Cilinder* cilinder_ch5 = new Cilinder(cilinder_center_chair, d_cil_chair, cilinder_chair_radius, cilinder_chair_height, mat_cilinderchair);     
+    Cilinder* cilinder_ch6 = new Cilinder(cilinder_center_chair, d_cil_chair, cilinder_chair_radius, cilinder_chair_height, mat_cilinderchair);
+    Cilinder* cilinder_ch7 = new Cilinder(cilinder_center_chair, d_cil_chair, cilinder_chair_radius, cilinder_chair_height, mat_cilinderchair);
+    // Cone
 
     Vec3 cone_base_center = Vec3(0.0, 0.0, -10.0); // Set the cone base center position
     Vec3 cone_top_vertex = Vec3(0.0, 10.0 , -10.0); // Set the cone top vertex position
