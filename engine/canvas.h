@@ -6,6 +6,7 @@
 #include "ray.h"
 #include "light.h"
 #include "shapes/shape.h"
+#include <iostream>
 //mudar de Canvas pra canvas
 //mudar de janela pra janela
 class Canvas {
@@ -124,6 +125,16 @@ class Canvas {
             }
 
             SDL_RenderPresent(renderer);
+        }
+
+        void aumentar_d() {
+            janela.d -= 0.1;
+            
+        }
+    
+        void diminuir_d() {
+            janela.d += 0.1;
+           
         }
     
     private:

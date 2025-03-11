@@ -147,7 +147,7 @@ int main() {
     
     Cone* cone = new Cone(cilinder_center, cilinder_center + d_cil * cilinder_height, cilinder_radius, mat_cone);
     Malha* malha = new Malha("engine/shapes/teapot_rotated.obj", mat_malha);
-    // Add lights
+    //Add lights
 
 
     Light light = Light(
@@ -278,6 +278,20 @@ int main() {
         while (SDL_PollEvent(&event) != 0) {
             if (event.type == SDL_QUIT || (event.type == SDL_KEYDOWN && event.key.keysym.sym == SDLK_ESCAPE)) {
                 goto quit;
+            }
+
+            if (event.type == SDL_KEYDOWN) {
+                switch (event.key.keysym.sym) {
+                    case SDLK_PLUS:  // Tecla +
+                    case SDLK_KP_PLUS:  // Tecla + do teclado numérico
+                        canvas.aumentar_d();
+                        break;
+
+                    case SDLK_MINUS:  // Tecla -
+                    case SDLK_KP_MINUS:  // Tecla - do teclado numérico
+                        canvas.diminuir_d();
+                        break;
+                }
             }
         }
 

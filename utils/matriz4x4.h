@@ -7,7 +7,7 @@
 
 #include "vec3.h"
 #include "vec4.h"
-#define  M_PI  3.14159265358979323846264338327950288
+#define M_PI 3.14159265358979323846
 
 
 class Matrix4x4 {
