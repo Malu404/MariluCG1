@@ -128,11 +128,17 @@ int main() {
     // Cone* cone = new Cone(cilinder_center, cilinder_center + d_cil * cilinder_height, cilinder_radius, mat_cone);
     // Malha* malha = new Malha("engine/shapes/teapot_rotated.obj", mat_malha);
     // Add lights
-    Light light = Light(
-        Vec3(4.0, 3.0, 10.0),
-        Vec3(1.0, 1.0, 1.0),
-        0.7
-    );
+
+
+    // Light light = Light(
+    //     Vec3(4.0, 3.0, 10.0),
+    //     Vec3(1.0, 1.0, 1.0),
+    //     0.7
+    // );
+
+
+
+
     Vec3 ambient_light = Vec3(0.3, 0.3, 0.3);
     
     Canvas canvas = Canvas(p0, x_min, y_min, x_max, y_max, d1, cols1, rows1, bg_color);
@@ -202,7 +208,7 @@ std::cout << "Nova direção do cilindro: (" << cilinder->direction.x << ", " <<
     
     Scene scene = Scene(ambient_light);
     scene.add_object(sphere);
-    //scene.add_object(cilinder);
+    scene.add_object(cilinder);
     scene.add_object(plane);
     scene.add_object(plane2);
     //scene.add_object(cone);
