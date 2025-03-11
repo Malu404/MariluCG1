@@ -132,7 +132,15 @@ int main() {
         0.7
     );
     Vec3 ambient_light = Vec3(0.3, 0.3, 0.3);
-    
+    Light spot_light = Light(
+        Vec3(0, 8, 10),       // Posição
+        Vec3(0, -1, -2),       // Direção
+        Vec3(1, 1, 1),        // Cor
+        1.5f,                 // Intensidade
+        30.0,                 // Ângulo (graus)
+        8.0                   // Expoente de suavização
+    );
+   
     Canvas canvas = Canvas(p0, x_min, y_min, x_max, y_max, d1, cols1, rows1, bg_color);
     
     Scene scene = Scene(ambient_light);
@@ -142,8 +150,8 @@ int main() {
     scene.add_object(plane2);
     //scene.add_object(cone);
     //scene.add_object(malha);
-
-    scene.add_light(light);
+    scene.add_light(spot_light);
+    //scene.add_light(light);
     
     // SDL init
     if (SDL_Init(SDL_INIT_VIDEO) != 0) { printf("SDL_Init Error: %s\n", SDL_GetError()); return 1; }
