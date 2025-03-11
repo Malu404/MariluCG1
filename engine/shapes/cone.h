@@ -1,6 +1,7 @@
 #ifndef CONE_H
 #define CONE_H
 
+#include "../../utils/matriz4x4.h"
 #include "shape.h"
 #include <cmath>
 
@@ -135,6 +136,44 @@ public:
         cos_angle = height / std::sqrt(height * height + radius * radius); // Calcula o angulo
         cos_angle_sq = cos_angle * cos_angle; // Deixa calculado o cos^2 do angulo
     }
+
+
+    // // Função para aplicar transformação
+    // void transform(const Matrix4x4& transformation_matrix) {
+    //     // Aplica a transformação ao centro da base e ao vértice superior
+    //     base_center = transformation_matrix * base_center;
+    //     top_vertex = transformation_matrix * top_vertex;
+
+    //     // Ajusta o raio e a altura se a transformação incluir escala
+    //     Vec3 scale = transformation_matrix.get_scale();
+    //     radius *= scale.x; // Ajusta o raio com base na escala em X (ou qualquer eixo)
+    //     height *= scale.y; // Ajusta a altura com base na escala em Y
+
+    //     // Atualiza a direção do eixo e outras constantes
+    //     update_constants();
+    // }
+
+
+    //  // Função para aplicar uma matriz de transformação
+    //  void transform(const Matrix4x4& matrix) {
+    //     // Aplica a transformação ao centro da base
+    //     base_center = matrix * base_center;
+
+    //     // Aplica a transformação ao vértice superior
+    //     top_vertex = matrix * top_vertex;
+
+    //     // Atualiza a direção do eixo
+    //     axis_direction = (top_vertex - base_center).normalize();
+
+    //     // Atualiza a altura
+    //     height = (top_vertex - base_center).magnitude();
+
+    //     // Se a transformação incluir escala, ajusta o raio
+    //     Vec3 scale = matrix.get_scale();
+    //     radius *= scale.x; // Ajusta o raio com base na escala em X (ou qualquer eixo)
+    // }
+
+    
 };
 
 #endif

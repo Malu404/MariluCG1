@@ -171,14 +171,108 @@ class Matrix4x4 {
                     -m[3][0],  -m[3][1],  -m[3][2],  -m[3][3]);
                 }
 
-                static Matrix4x4 translation(const double tx, double ty, double tz) {
-                    return Matrix4x4(
-                        1, 0, 0, tx,  // Linha 0
-                        0, 1, 0, ty,  // Linha 1
-                        0, 0, 1, tz,  // Linha 2
-                        0, 0, 0, 1    // Linha 3
-                    );
+
+        Matrix4x4 transpose() const {
+            Matrix4x4 result;
+            for (int i = 0; i < 4; i++) {
+                for (int j = 0; j < 4; j++) {
+                    result.m[i][j] = m[j][i];
                 }
+            }
+            return result;
+        }
+
+
+        Matrix4x4 inverse() const {
+            constexpr double SINGULARITY_TOLERANCE = 1e-10;
+            Matrix4x4 inv;
+            double det;
+    
+            
+            auto det3x3 = [](double a11, double a12, double a13,
+                double a21, double a22, double a23,
+                double a31, double a32, double a33) -> double {
+                    return a11 * (a22 * a33 - a23 * a32)
+                        - a12 * (a21 * a33 - a23 * a31)
+                        + a13 * (a21 * a32 - a22 * a31);
+                };
+    
+            // Calculo dos cofactors e transpose 
+            inv.m[0][0] = det3x3(m[1][1], m[1][2], m[1][3], m[2][1], m[2][2], m[2][3], m[3][1], m[3][2], m[3][3]);
+            inv.m[0][1] = -det3x3(m[0][1], m[0][2], m[0][3], m[2][1], m[2][2], m[2][3], m[3][1], m[3][2], m[3][3]);
+            inv.m[0][2] = det3x3(m[0][1], m[0][2], m[0][3], m[1][1], m[1][2], m[1][3], m[3][1], m[3][2], m[3][3]);
+            inv.m[0][3] = -det3x3(m[0][1], m[0][2], m[0][3], m[1][1], m[1][2], m[1][3], m[2][1], m[2][2], m[2][3]);
+    
+            inv.m[1][0] = -det3x3(m[1][0], m[1][2], m[1][3], m[2][0], m[2][2], m[2][3], m[3][0], m[3][2], m[3][3]);
+            inv.m[1][1] = det3x3(m[0][0], m[0][2], m[0][3], m[2][0], m[2][2], m[2][3], m[3][0], m[3][2], m[3][3]);
+            inv.m[1][2] = -det3x3(m[0][0], m[0][2], m[0][3], m[1][0], m[1][2], m[1][3], m[3][0], m[3][2], m[3][3]);
+            inv.m[1][3] = det3x3(m[0][0], m[0][2], m[0][3], m[1][0], m[1][2], m[1][3], m[2][0], m[2][2], m[2][3]);
+    
+            inv.m[2][0] = det3x3(m[1][0], m[1][1], m[1][3], m[2][0], m[2][1], m[2][3], m[3][0], m[3][1], m[3][3]);
+            inv.m[2][1] = -det3x3(m[0][0], m[0][1], m[0][3], m[2][0], m[2][1], m[2][3], m[3][0], m[3][1], m[3][3]);
+            inv.m[2][2] = det3x3(m[0][0], m[0][1], m[0][3], m[1][0], m[1][1], m[1][3], m[3][0], m[3][1], m[3][3]);
+            inv.m[2][3] = -det3x3(m[0][0], m[0][1], m[0][3], m[1][0], m[1][1], m[1][3], m[2][0], m[2][1], m[2][3]);
+    
+            inv.m[3][0] = -det3x3(m[1][0], m[1][1], m[1][2], m[2][0], m[2][1], m[2][2], m[3][0], m[3][1], m[3][2]);
+            inv.m[3][1] = det3x3(m[0][0], m[0][1], m[0][2], m[2][0], m[2][1], m[2][2], m[3][0], m[3][1], m[3][2]);
+            inv.m[3][2] = -det3x3(m[0][0], m[0][1], m[0][2], m[1][0], m[1][1], m[1][2], m[3][0], m[3][1], m[3][2]);
+            inv.m[3][3] = det3x3(m[0][0], m[0][1], m[0][2], m[1][0], m[1][1], m[1][2], m[2][0], m[2][1], m[2][2]);
+    
+            // Compute the determinant
+            det = m[0][0] * inv.m[0][0] + m[0][1] * inv.m[0][1] + m[0][2] * inv.m[0][2] + m[0][3] * inv.m[0][3];
+    
+            if (std::fabs(det) < SINGULARITY_TOLERANCE) {
+                throw std::runtime_error("Matrix is singular and cannot be inverted.");
+            }
+    
+            // Normalize the inverse by the determinant
+            det = 1.0 / det;
+            for (int i = 0; i < 4; i++) {
+                for (int j = 0; j < 4; j++) {
+                    inv.m[i][j] *= det;
+                }
+            }
+    
+            return inv;
+        }
+
+
+
+
+        double determinant() const {
+            // Helper lambda to calculate the determinant of a 3x3 matrix
+            auto det3x3 = [](double a11, double a12, double a13,
+                double a21, double a22, double a23,
+                double a31, double a32, double a33) -> double {
+                    return a11 * (a22 * a33 - a23 * a32)
+                        - a12 * (a21 * a33 - a23 * a31)
+                        + a13 * (a21 * a32 - a22 * a31);
+                };
+    
+            // Expand along the first row
+            return m[0][0] * det3x3(m[1][1], m[1][2], m[1][3],
+                m[2][1], m[2][2], m[2][3],
+                m[3][1], m[3][2], m[3][3])
+                - m[0][1] * det3x3(m[1][0], m[1][2], m[1][3],
+                    m[2][0], m[2][2], m[2][3],
+                    m[3][0], m[3][2], m[3][3])
+                + m[0][2] * det3x3(m[1][0], m[1][1], m[1][3],
+                    m[2][0], m[2][1], m[2][3],
+                    m[3][0], m[3][1], m[3][3])
+                - m[0][3] * det3x3(m[1][0], m[1][1], m[1][2],
+                    m[2][0], m[2][1], m[2][2],
+                    m[3][0], m[3][1], m[3][2]);
+        }
+
+
+        static Matrix4x4 translation(const double tx, double ty, double tz) {
+            return Matrix4x4(
+                1, 0, 0, tx,  // Linha 0
+                0, 1, 0, ty,  // Linha 1
+                0, 0, 1, tz,  // Linha 2
+                0, 0, 0, 1    // Linha 3
+            );
+        }
             
             //    static Matrix4x4 scale_matrix(const double sx, double sy, double sz){
             //         Matrix4x4 matrix;
@@ -190,6 +284,14 @@ class Matrix4x4 {
             //         );
             //     }
 
+
+            Vec3 get_scale() const {
+                // Extrai a escala dos elementos diagonais da matriz
+                double scale_x = std::sqrt(m[0][0] * m[0][0] + m[1][0] * m[1][0] + m[2][0] * m[2][0]);
+                double scale_y = std::sqrt(m[0][1] * m[0][1] + m[1][1] * m[1][1] + m[2][1] * m[2][1]);
+                double scale_z = std::sqrt(m[0][2] * m[0][2] + m[1][2] * m[1][2] + m[2][2] * m[2][2]);
+                return Vec3(scale_x, scale_y, scale_z);
+            }
 
             static Matrix4x4 scale_matrix(const double sx, double sy, double sz) {
                 return Matrix4x4(

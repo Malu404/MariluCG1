@@ -1,6 +1,8 @@
 #ifndef CILINDER_H
 #define CILINDER_H
 
+#include "../../utils/matriz4x4.h"
+
 #include "shape.h"
 #include <cmath>
 
@@ -67,6 +69,22 @@ class Cilinder : public Shape {
 
             return t_min == INFINITY ? -INFINITY : t_min;
         }
+
+
+
+    //     // Função para aplicar transformação
+    // void transform(const Matrix4x4& transformation_matrix) {
+    //     // Aplica a transformação ao centro
+    //     center = transformation_matrix * center;
+
+    //     // Aplica a transformação à direção (sem translação)
+    //     direction = (transformation_matrix * Vec4(direction, 0.0)).to_vec3().normalize();
+
+    //     // Ajusta o raio e a altura se a transformação incluir escala
+    //     Vec3 scale = transformation_matrix.get_scale();
+    //     radius *= scale.x; // Ajusta o raio com base na escala em X (ou qualquer eixo)
+    //     height *= scale.y; // Ajusta a altura com base na escala em Y
+    // }
 };
 
 #endif

@@ -24,11 +24,11 @@ public:
     Vec3 centroid;
     Vec3 min_point;
     Vec3 max_point;
-    
 
     Malha(const std::string& filepath, Material mat) : Shape(mat) {
         load_obj(filepath);
         create_triangles();
+        calculate_bounding_box(); // Calcula a caixa delimitadora inicial
     }
 
     void load_obj(const std::string& filepath) {
@@ -71,7 +71,6 @@ public:
     }
 
     inline Vec3 get_normal(Vec3 p) const override {
-        // Implementação simplificada: retorna a normal do primeiro triângulo que contém o ponto p
         for (const auto& triangle : triangles) {
             if (triangle.contains(p)) {
                 return triangle.get_normal(p);
@@ -79,28 +78,10 @@ public:
         }
         return Vec3(0, 0, 0); // Normal padrão se nenhum triângulo contém o ponto
     }
-    /*inline Vec3 get_normal(Vec3 p) const override {
-        double t_min = INFINITY;
-        Vec3 normal_correta = Vec3(0, 0, 0);
-    
-        // Cria um raio partindo do ponto p em direção oposta à normal (para evitar self-shadowing)
-        Ray raio = Ray(p + normal_correta * 1e-4, -normal_correta); 
-    
-        for (const auto& triangle : triangles) {
-            double t = triangle.intersects(raio);
-            if (t > 0 && t < t_min) {
-                t_min = t;
-                normal_correta = triangle.normal;
-            }
-        }
-    
-        return normal_correta;
-    }*/
-    
 
     double intersects(Ray r) const override {
         double t_min = INFINITY;
-        for (const auto& triangle : triangles) {//tirei o const daqui antes do auto, nao sei se vai explodir o codigo 4/3/25 - 18:33
+        for (const auto& triangle : triangles) {
             double t = triangle.intersects(r);
             if (t > 0 && t < t_min) {
                 t_min = t;
@@ -109,42 +90,35 @@ public:
         return t_min == INFINITY ? -INFINITY : t_min;
     }
 
-
-    
     void calculate_bounding_box() {
-        Vec3 min_point = Vec3(INFINITY, INFINITY, INFINITY);
-        Vec3 max_point = Vec3(-INFINITY, -INFINITY, -INFINITY);
-        for (Vec3 vertex : vertices) {
-            min_point.x = min(vertex.x, min_point.x);
-            min_point.y = min(vertex.y, min_point.y);
-            min_point.z = min(vertex.z, min_point.z);
-    
-            max_point.x = max(vertex.x, max_point.x);
-            max_point.y = max(vertex.y, max_point.y);
-            max_point.z = max(vertex.z, max_point.z);
+        min_point = Vec3(INFINITY, INFINITY, INFINITY);
+        max_point = Vec3(-INFINITY, -INFINITY, -INFINITY);
+        for (const Vec3& vertex : vertices) {
+            min_point.x = std::min(vertex.x, min_point.x);
+            min_point.y = std::min(vertex.y, min_point.y);
+            min_point.z = std::min(vertex.z, min_point.z);
+
+            max_point.x = std::max(vertex.x, max_point.x);
+            max_point.y = std::max(vertex.y, max_point.y);
+            max_point.z = std::max(vertex.z, max_point.z);
         }
-        Vec3 bounding_box_max = max_point;
-        Vec3 bounding_box_min = min_point;
     }
-    // void transform(Matrix4x4 m) {
-    //     for (size_t i = 0; i < vertices.size(); i++) {
-    //         vertices[i] = m * vertices[i];
-    //     }
-    //     calculate_bounding_box();
-    // }
 
-    
-    
+    // Aplica uma transformação a todos os vértices da malha
+    void transform(const Matrix4x4& transformation_matrix) {
+        for (Vec3& vertex : vertices) {
+            vertex = transformation_matrix * vertex;
+        }
+        // Atualiza os triângulos com os novos vértices transformados
+        create_triangles();
+        // Recalcula a caixa delimitadora
+        calculate_bounding_box();
+    }
 
-    //  void apply_transform(const Matrix4x4& transformation_matrix) {
-    //     for (auto& vertex : vertices) {
-    //          vertex.transform(transformation_matrix);
-    //      }
-    //      centroid.transform(transformation_matrix);
-    //      // Recalcula a caixa delimitadora (bounding box)
-    //     std::tie(min_point, max_point) = calculate_bounding_box(vertices);
-    //  }
-    
+    // Função alternativa para aplicar transformações
+    void apply_transform(const Matrix4x4& transformation_matrix) {
+        transform(transformation_matrix); // Reutiliza a função transform
+    }
 };
 
 #endif
