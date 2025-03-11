@@ -62,10 +62,10 @@ int main() {
         100.0
     );
     Material mat_cilindertable = Material(
-        Vec3(0.2, 0.3, 0.8), //ambiente
-        Vec3(0.2, 0.3, 0.8), //difuso
-        Vec3(0.2, 0.3, 0.8),// especular
-        100.0
+        Vec3(0.42, 0.318, 0.251), //ambiente
+        Vec3(0.42, 0.318, 0.251), //difuso
+        Vec3(0.42, 0.318, 0.251),// especular
+        1
     );
     Material mat_cone = Material(
         Vec3(0.8, 0.3, 0.2), // Ambient
