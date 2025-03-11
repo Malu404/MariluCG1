@@ -64,10 +64,10 @@ int main() {
         100.0
     );
     Material mat_cilindertable = Material(
-        Vec3(0.2, 0.3, 0.8), //ambiente
-        Vec3(0.2, 0.3, 0.8), //difuso
-        Vec3(0.2, 0.3, 0.8),// especular
-        100.0
+        Vec3(0.42, 0.318, 0.251), //ambiente
+        Vec3(0.42, 0.318, 0.251), //difuso
+        Vec3(0.42, 0.318, 0.251),// especular
+        1
     );
     Material mat_cone = Material(
         Vec3(0.8, 0.3, 0.2), // Ambient
@@ -93,6 +93,7 @@ int main() {
 
     Sphere* sphere = new Sphere(sphere_center, sphere_radius, mat_sphere, &pokemon);
 
+  
     Vec3 plane_p0 = Vec3(0.0, -5.0, 0.0); // Green plane
     Vec3 plane_normal = Vec3(0.0, 1.0, 0.0);
     Vec3 plane2_p0 = Vec3(0.0, 0.0, -30.0); // Blue plane
@@ -141,10 +142,15 @@ int main() {
     Cilinder* cilinder_table_topo = new Cilinder(cilinder_center_table_topo, d_cil_table, cilinder_table_radius*1.5, cilinder_table_height/20, mat_cilindertable);
     Cilinder* cilinder_table_pé = new Cilinder(cilinder_center_table_pé, d_cil_table, cilinder_table_radius/1.5, cilinder_table_height/15, mat_cilindertable);
 
-    double cilinder_guaca_height = 1.5;
-    double cilinder_guaca_radius = 3.0;
-    Vec3 cilinder_center_guaca_top = Vec3(x_table, y_table+11, z_table);
+    double cilinder_guaca_height = 1.2;
+    double cilinder_guaca_radius = 2.0;
+    Vec3 cilinder_center_guaca_top = Vec3(x_table, y_table+10.5, z_table);
     Cilinder* cilinder_guacamole = new Cilinder(cilinder_center_guaca_top, d_cil_table, cilinder_guaca_radius, cilinder_guaca_height, mat_cilinder);
+
+
+    Vec3 sphere_center_guaca = Vec3(0, 11,0);
+    double sphere_radius_guaca = 1.5;
+    Sphere* sphere_guacamole = new Sphere(sphere_center_guaca, sphere_radius_guaca, mat_sphere);
 
     // Cone
 
@@ -158,7 +164,7 @@ int main() {
 
 
     Light light = Light(
-        Vec3(4.0, 3.0, 10.0),
+        Vec3(4.0, 13.0, 10.0),
         Vec3(1.0, 1.0, 1.0),
         0.7
     );
@@ -195,7 +201,7 @@ int main() {
     scene.add_object(cilinder_table_topo);
     scene.add_object(cilinder_table_pé);
     scene.add_object(cilinder_guacamole);
-
+    scene.add_object(sphere_guacamole);
 
 
     // SDL init
