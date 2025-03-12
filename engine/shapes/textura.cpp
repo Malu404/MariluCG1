@@ -1,4 +1,5 @@
 #include "textura.h"
+#include <algorithm>
 #include <stdexcept>
 
 Texture::Texture() {}
@@ -23,13 +24,16 @@ Texture::Texture(SDL_Surface* surface) {
 }
 
 Vec3 Texture::sample(double u, double v) const {
-    uint32_t x = static_cast<uint32_t>(u * width);
-    uint32_t y = static_cast<uint32_t>(v * height);
-
+    uint32_t x = static_cast<uint32_t>(clamp(u * width, 0., width - 1.));
+    uint32_t y = static_cast<uint32_t>(clamp(v * height, 0., height - 1.));
+    
     size_t index = (y * pitch + x * bpp);
     uint8_t r = texture_data[index];
+    // printf("yee haw1\n");
     uint8_t g = texture_data[index + 1];
+    // printf("yee haw2\n");
     uint8_t b = texture_data[index + 2];
+    // printf("yee haw3\n");
 
     return Vec3(r / 255.0, g / 255.0, b / 255.0);
 }

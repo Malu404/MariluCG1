@@ -4,6 +4,7 @@
 #include <tuple>
 #include "material.h"
 #include "../ray.h"
+#include "../../utils/matriz4x4.h"
 
 class Shape {
     public:
@@ -18,6 +19,8 @@ class Shape {
         // T negativo se não há colisão positiva (objeto atrás do p0 do raio),
         // -INFINITO se não há colisão.
         virtual double intersects(Ray r) const  = 0;
+
+        virtual void transform(Matriz4x4 m) = 0;
         //adicionei const = 0 para nao dar erro de compilacao 4/3/25 - 19:27 e pq sao operacoes que nao alteram valores do shape original
 };
 

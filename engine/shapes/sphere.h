@@ -11,17 +11,21 @@ public:
     double radius;
     Texture* texture;
 
-    Sphere() : center(Vec3(0.0, 0.0, 0.0)), radius(1.0), Shape(), texture(nullptr) {}
+    Sphere() : Shape(), center(Vec3(0.0, 0.0, 0.0)), radius(1.0), texture(nullptr) {}
     
     Sphere(Vec3 center, double radius, Material mat, Texture* texture = nullptr)
-        : center(center), radius(radius), Shape(mat), texture(texture) {}
+        : Shape(mat), center(center), radius(radius), texture(texture) {}
 
     inline Vec3 get_normal(Vec3 p) const override { 
-        return (p - center).normalize(); 
+        return (p - center).normalized(); 
+    }
+
+    void transform(Matriz4x4 m) override {
+        center = m * center;
     }
 
     std::pair<double, double> get_uv(const Vec3& point) const {
-        Vec3 dir = (point - center).normalize();
+        Vec3 dir = (point - center).normalized();
         double u = 0.5 + atan2(dir.z, dir.x) / (2 * M_PI);
         double v = 0.5 - asin(dir.y) / M_PI;
         return {u, v};

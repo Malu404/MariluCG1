@@ -1,63 +1,277 @@
-#ifndef MATRIX4X4_H
-#define MATRIX4X4_H
+#pragma once
+#include "vec3.h"
+#include <initializer_list>
 
-#include <cmath>
-#include <iostream>
-#include <iomanip> 
+struct Matriz4x4 {
+public:
+    double m[4][4];
+    // Identity matrix
+    static const Matriz4x4 I;
 
-#include "vec4.h"
+    // Constructor with initializer list
+    Matriz4x4(std::initializer_list<std::initializer_list<double>> list) {
+        int i = 0;
+        for (auto& row : list) {
+            int j = 0;
+            for (auto& val : row) {
+                m[i][j] = val;
+                j++;
+            }
+            i++;
+        }
+    }
 
-class Matrix4x4 {
-    public:
+    // Constructor
+    Matriz4x4(double m[4][4]) {
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                this->m[i][j] = m[i][j];
+            }
+        }
+    }
 
-        double m[4][4];
+    // Default constructor
+    Matriz4x4() {
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                m[i][j] = 0;
+            }
+        }
+    }
 
-        //conztrutor matriz identidade
-        Matrix4x4() { set_I();}
+    // Addition
+    Matriz4x4 operator+(const Matriz4x4& other) const {
+        Matriz4x4 result;
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                result.m[i][j] = m[i][j] + other.m[i][j];
+            }
+        }
+        return result;
+    }
 
-        //matrix identidade
-        void set_I() {
-            m[0][0] = 1; m[0][1] = 0; m[0][2] = 0; m[0][3] = 0;
-            m[1][0] = 0; m[1][1] = 1; m[1][2] = 0; m[1][3] = 0;
-            m[2][0] = 0; m[2][1] = 0; m[2][2] = 1; m[2][3] = 0;
-            m[3][0] = 0; m[3][1] = 0; m[3][2] = 0; m[3][3] = 1;
+    // Subtraction
+    Matriz4x4 operator-(const Matriz4x4& other) const {
+        Matriz4x4 result;
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                result.m[i][j] = m[i][j] - other.m[i][j];
+            }
+        }
+        return result;
+    }
+
+    // Multiplication
+    Matriz4x4 operator*(const Matriz4x4& other) const {
+        Matriz4x4 result;
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                result.m[i][j] = 0;
+                for (int k = 0; k < 4; k++) {
+                    result.m[i][j] += m[i][k] * other.m[k][j];
+                }
+            }
+        }
+        return result;
+    }
+
+    // Matrix * Vec3
+    Vec3 operator*(const Vec3& other) const {
+        Vec3 result;
+        result.x = other.x * m[0][0] + other.y * m[0][1] + other.z * m[0][2] + m[0][3];
+        result.y = other.x * m[1][0] + other.y * m[1][1] + other.z * m[1][2] + m[1][3];
+        result.z = other.x * m[2][0] + other.y * m[2][1] + other.z * m[2][2] + m[2][3];
+        return result;
+    }
+
+    // Matrix * n
+    Matriz4x4 operator*(double n) const {
+        Matriz4x4 result;
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                result.m[i][j] = m[i][j] * n;
+            }
+        }
+        return result;
+    }
+
+    // Matrix / n
+    Matriz4x4 operator/(double n) const {
+        Matriz4x4 result;
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                result.m[i][j] = m[i][j] / n;
+            }
+        }
+        return result;
+    }
+
+    // -Matrix
+    Matriz4x4 operator-() const {
+        Matriz4x4 result;
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                result.m[i][j] = -m[i][j];
+            }
+        }
+        return result;
+    }
+
+    // Overload [] operator
+    double* operator[](int index) {
+        return m[index];
+    }
+
+    const double* operator[](int index) const {
+        return m[index];
+    }
+
+    // Translation matrix
+    static Matriz4x4 translation_matrix(double tx, double ty, double tz) {
+        return Matriz4x4({
+            {1.0, 0.0, 0.0, tx},
+            {0.0, 1.0, 0.0, ty},
+            {0.0, 0.0, 1.0, tz},
+            {0.0, 0.0, 0.0, 1.0}
+        });
+    }
+
+    // Scale matrix
+    static Matriz4x4 scale_matrix(double sx, double sy, double sz, Vec3 pivot) {
+        return translation_matrix(pivot.x, pivot.y, pivot.z) * Matriz4x4({
+            {sx, 0.0, 0.0, 0.0},
+            {0.0, sy, 0.0, 0.0},
+            {0.0, 0.0, sz, 0.0},
+            {0.0, 0.0, 0.0, 1.0}
+        }) * translation_matrix(-pivot.x, -pivot.y, - pivot.z);
+    }
+
+    // Shear matrix along x-axis
+    static Matriz4x4 shear_matrix_x(double sh_yz, double sh_zy, Vec3 pivot) {
+        return translation_matrix(pivot.x, pivot.y, pivot.z) * Matriz4x4({
+            {1.0, sh_yz, sh_zy, 0.0},
+            {0.0, 1.0, 0.0, 0.0},
+            {0.0, 0.0, 1.0, 0.0},
+            {0.0, 0.0, 0.0, 1.0}
+        }) * translation_matrix(-pivot.x, -pivot.y, -pivot.z);
+    }
+
+    // Shear matrix along y-axis
+    static Matriz4x4 shear_matrix_y(double sh_xz, double sh_zx, Vec3 pivot) {
+        return translation_matrix(pivot.x, pivot.y, pivot.z) * Matriz4x4({
+            {1.0, 0.0, 0.0, 0.0},
+            {sh_xz, 1.0, sh_zx, 0.0},
+            {0.0, 0.0, 1.0, 0.0},
+            {0.0, 0.0, 0.0, 1.0}
+        }) * translation_matrix(-pivot.x, -pivot.y, -pivot.z);
+    }
+
+    // Shear matrix along z-axis
+    static Matriz4x4 shear_matrix_z(double sh_xy, double sh_yx, Vec3 pivot) {
+        return translation_matrix(pivot.x, pivot.y, pivot.z) * Matriz4x4({
+            {1.0, 0.0, 0.0, 0.0},
+            {0.0, 1.0, 0.0, 0.0},
+            {sh_xy, sh_yx, 1.0, 0.0},
+            {0.0, 0.0, 0.0, 1.0}
+        }) * translation_matrix(-pivot.x, -pivot.y, -pivot.z);
+    }
+
+    // Shear matrix along x-axis based on angle
+    static Matriz4x4 shear_matrix_x_angle(double angle_yz, double angle_zy, Vec3 pivot) {
+        double sh_yz = tan(degreesToRadians(angle_yz));
+        double sh_zy = tan(degreesToRadians(angle_zy));
+        return shear_matrix_x(sh_yz, sh_zy, pivot);
+    }
+
+    // Shear matrix along y-axis based on angle
+    static Matriz4x4 shear_matrix_y_angle(double angle_xz, double angle_zx, Vec3 pivot) {
+        double sh_xz = tan(degreesToRadians(angle_xz));
+        double sh_zx = tan(degreesToRadians(angle_zx));
+        return shear_matrix_y(sh_xz, sh_zx, pivot);
+    }
+
+    // Shear matrix along z-axis based on angle
+    static Matriz4x4 shear_matrix_z_angle(double angle_xy, double angle_yx, Vec3 pivot) {
+        double sh_xy = tan(degreesToRadians(angle_xy));
+        double sh_yx = tan(degreesToRadians(angle_yx));
+        return shear_matrix_z(sh_xy, sh_yx, pivot);
+    }
+
+    // Rotation around an arbitrary axis
+    static Matriz4x4 rotation_around_axis(const Vec3& axis, double angle, Vec3 pivot) {
+        Vec3 normalized_axis = axis.normalized();
+        double x = normalized_axis.x;
+        double y = normalized_axis.y;
+        double z = normalized_axis.z;
+        double cos_theta = cos(degreesToRadians(angle));
+        double sin_theta = sin(degreesToRadians(angle));
+        double one_minus_cos = 1.0 - cos_theta;
+
+        return translation_matrix(pivot.x, pivot.y, pivot.z) * Matriz4x4({
+            {
+                cos_theta + x * x * one_minus_cos,
+                x * y * one_minus_cos - z * sin_theta,
+                x * z * one_minus_cos + y * sin_theta,
+                0.0
+            },
+            {
+                y * x * one_minus_cos + z * sin_theta,
+                cos_theta + y * y * one_minus_cos,
+                y * z * one_minus_cos - x * sin_theta,
+                0.0
+            },
+            {
+                z * x * one_minus_cos - y * sin_theta,
+                z * y * one_minus_cos + x * sin_theta,
+                cos_theta + z * z * one_minus_cos,
+                0.0
+            },
+            {0.0, 0.0, 0.0, 1.0}
+        }) * translation_matrix(-pivot.x, -pivot.y, -pivot.z);
+    }
+
+    static Matriz4x4 reflection_matrix(const Vec3& pc, const Vec3& normal) {
+        Vec3 u = normal.normalized();
+
+        Matriz4x4 householder_matrix;
+        for (int i = 0; i < 4; i++) {
+            for (int j = 0; j < 4; j++) {
+                if (i == j) {
+                    householder_matrix.m[i][j] = 1.0;
+                } else {
+                    householder_matrix.m[i][j] = 0.0;
+                }
+            }
         }
 
-        //construtor da matriz4x4
-        Matrix4x4(
-            double m00, double m01, double m02, double m03,
-            double m10, double m11, double m12, double m13,
-            double m20, double m21, double m22, double m23,
-            double m30, double m31, double m32, double m33
-        ) {
-            m[0][0] = m00; m[0][1] = m01; m[0][2] = m02; m[0][3] = m03;
-            m[1][0] = m10; m[1][1] = m11; m[1][2] = m12; m[1][3] = m13;
-            m[2][0] = m20; m[2][1] = m21; m[2][2] = m22; m[2][3] = m23;
-            m[3][0] = m30; m[3][1] = m31; m[3][2] = m32; m[3][3] = m33;
+        householder_matrix.m[0][0] -= 2.0 * u.x * u.x;
+        householder_matrix.m[0][1] -= 2.0 * u.x * u.y;
+        householder_matrix.m[0][2] -= 2.0 * u.x * u.z;
+        householder_matrix.m[1][0] -= 2.0 * u.y * u.x;
+        householder_matrix.m[1][1] -= 2.0 * u.y * u.y;
+        householder_matrix.m[1][2] -= 2.0 * u.y * u.z;
+        householder_matrix.m[2][0] -= 2.0 * u.z * u.x;
+        householder_matrix.m[2][1] -= 2.0 * u.z * u.y;
+        householder_matrix.m[2][2] -= 2.0 * u.z * u.z;
+
+        return translation_matrix(pc.x, pc.y, pc.z) * householder_matrix * translation_matrix(-pc.x, -pc.y, -pc.z);
+    }
+    
+    private: 
+        // Function to convert degrees to radians
+        static double degreesToRadians(double degrees) {
+            return degrees * (M_PI / 180.0);
         }
 
-        //matriz + matriz
-        Matrix4x4 operator+(const Matrix4x4& other)
-            const { return Matrix4x4(
-                m[0][0] + other.m[0][0], m[0][1] + other.m[0][1], m[0][2] + other.m[0][2], m[0][3] + other.m[0][3],
-                m[1][0] + other.m[1][0], m[1][1] + other.m[1][1], m[1][2] + other.m[1][1], m[1][3] + other.m[1][3], 
-                m[2][0] + other.m[2][0], m[2][1] + other.m[2][1], m[2][2] + other.m[2][2], m[2][3] + other.m[2][3], 
-                m[3][0] + other.m[3][0], m[3][1] + other.m[3][1], m[3][2] + other.m[3][2], m[3][3] + other.m[3][3]); }
-        
-        //matriz - matriz
-        Matrix4x4 operator-(const Matrix4x4& other)
-                const { return Matrix4x4(
-                m[0][0] - other.m[0][0], m[0][1] - other.m[0][1], m[0][2] - other.m[0][2], m[0][3] - other.m[0][3],
-                m[1][0] - other.m[1][0], m[1][1] - other.m[1][1], m[1][2] - other.m[1][1], m[1][3] - other.m[1][3], 
-                m[2][0] - other.m[2][0], m[2][1] - other.m[2][1], m[2][2] - other.m[2][2], m[2][3] - other.m[2][3], 
-                m[3][0] - other.m[3][0], m[3][1] - other.m[3][1], m[3][2] - other.m[3][2], m[3][3] - other.m[3][3]
-                ); }
-
-        
-        //matriz * matriz
-        Matrix4x4 operator*(const Matrix4x4& other)
-                const { return Matrix4x4(
-                
-                ); }
+        // Function to convert radians to degrees
+        static double radiansToDegrees(double radians) {
+            return radians * (180.0 / M_PI);
+        }
 };
-#endif
+
+inline const Matriz4x4 Matriz4x4::I = Matriz4x4({
+    {1.0, 0.0, 0.0, 0.0},
+    {0.0, 1.0, 0.0, 0.0},
+    {0.0, 0.0, 1.0, 0.0},
+    {0.0, 0.0, 0.0, 1.0}
+});

@@ -10,12 +10,18 @@ public:
     Vec3 normal;
 
     Triangle( Vec3 v0, Vec3 v1, Vec3 v2, Material mat) : Shape(mat), v0(v0), v1(v1), v2(v2) {
-        normal = (v1 - v0).cross(v2 - v0).normalize();
-        //normal = (v2 - v0).cross(v1 - v0).normalize();
+        normal = (v1 - v0).cross(v2 - v0).normalized();
+        //normal = (v2 - v0).cross(v1 - v0).normalized();
     }
 
-    inline Vec3 get_normal( Vec3 p) const override {
+    inline Vec3 get_normal(Vec3 _) const override {
         return normal;
+    }
+
+    void transform(Matriz4x4 m) override {
+        v0 = m*v0;
+        v1 = m*v1;
+        v2 = m*v2;
     }
 
     double intersects(Ray r) const override {

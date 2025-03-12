@@ -25,37 +25,37 @@ public:
         create_triangles();
     }
 
+    void transform(Matriz4x4 m) override {
+        for (Triangle& triangle : triangles) {
+            triangle.transform(m);
+        }
+    }
+
     void load_obj(const std::string& filepath) {
         std::ifstream file(filepath);
-        if (!file.is_open()) throw std::runtime_error("Failed to open OBJ file: " + filepath);
-
         std::string line;
         while (std::getline(file, line)) {
-            if (line.empty() || line[0] == '#') continue;
             std::istringstream iss(line);
             std::string prefix;
             iss >> prefix;
-
-            if (prefix == "v") {
-                double x, y, z;
-                iss >> x >> y >> z;
-                vertices.emplace_back(x, y, z);
-            } else if (prefix == "f") {
-                std::vector<int> faceIndices;
-                std::string vertexData;
-                while (iss >> vertexData) {
-                    std::istringstream vertexStream(vertexData);
-                    int vertexIndex;
-                    vertexStream >> vertexIndex;
-                    faceIndices.push_back(vertexIndex - 1);
+    
+            if (prefix == "v") { // Vertex
+                Vec3 vertex;
+                iss >> vertex.x >> vertex.y >> vertex.z;
+                vertices.push_back(vertex);
+            } else if (prefix == "f") { // Face
+                int vertexIndex[3];
+                for (int i = 0; i < 3; ++i) {
+                    iss >> vertexIndex[i];
+                    vertexIndex[i]--; // OBJ indices are 1-based, convert to 0-based
+                    if (iss.peek() == '/') {
+                        iss.ignore(256, ' '); // Ignore texture and normal indices
+                    }
                 }
-                faces.push_back(std::array<int, 3>{
-                    faceIndices[0], 
-                    faceIndices[1], 
-                    faceIndices[2]
-                });
+                faces.push_back({vertexIndex[0], vertexIndex[1], vertexIndex[2]});
             }
         }
+        file.close();
     }
 
     void create_triangles() {
@@ -73,24 +73,6 @@ public:
         }
         return Vec3(0, 0, 0); // Normal padrão se nenhum triângulo contém o ponto
     }
-    /*inline Vec3 get_normal(Vec3 p) const override {
-        double t_min = INFINITY;
-        Vec3 normal_correta = Vec3(0, 0, 0);
-    
-        // Cria um raio partindo do ponto p em direção oposta à normal (para evitar self-shadowing)
-        Ray raio = Ray(p + normal_correta * 1e-4, -normal_correta); 
-    
-        for (const auto& triangle : triangles) {
-            double t = triangle.intersects(raio);
-            if (t > 0 && t < t_min) {
-                t_min = t;
-                normal_correta = triangle.normal;
-            }
-        }
-    
-        return normal_correta;
-    }*/
-    
 
     double intersects(Ray r) const override {
         double t_min = INFINITY;

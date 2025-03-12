@@ -38,7 +38,7 @@ struct Vec3 {
 
     inline double magnitude() const { return sqrt(x*x + y*y + z*z); }
 
-    inline Vec3 normalize() const { return *this / magnitude(); }
+    inline Vec3 normalized() const { return *this / magnitude(); }
 
     inline Vec3 rgb_normalized() const { return Vec3(x/255.0, y/255.0, z/255.0); }
 

@@ -5,45 +5,74 @@
 #include "SDL_stdinc.h"
 #include <cmath>
 
+enum TipoLuz {
+    Pontual,
+    Spot,
+    Direcional
+};
+
 class Light {
     public:
+
         Vec3 pos;
         Vec3 color;
         Vec3 direction;   // Nova: direção do spot
         double angle;      // Novo: ângulo de abertura em radianos
-        double exponent;   // Novo: expoente de atenuação
         float intensity;
+        TipoLuz tipo;
         
         Light () : pos(Vec3()), color(Vec3(1.0, 1.0, 1.0)), 
-                 direction(Vec3(0, -1, 0)), angle(M_PI/4), exponent(1.0), intensity(1.0) {}
+                 direction(Vec3(0, -1, 0)), angle(M_PI/4), intensity(1.0), tipo(Pontual) {}
 
-        // Construtor para luz direcional padrão
-        Light (Vec3 pos, Vec3 color, float intensity) : 
-            pos(pos), color(color), direction(Vec3(0, -1, 0)),
-            angle(M_PI), exponent(0.0), intensity(intensity) {}
+        // Construtor para luz pontual
+        static Light luz_pontual(Vec3 pos, Vec3 color, float intensity) {
+            Light luz = Light();
 
-        // Construtor completo para luz spot
-        Light (Vec3 pos, Vec3 direction, Vec3 color, 
-              float intensity, double angle_degrees, double exponent) : 
-            pos(pos), color(color), direction(direction.normalize()),
-            intensity(intensity), exponent(exponent) 
-        {
-            angle = (angle_degrees * M_PI) / 180.0; // Converte para radianos
+            luz.pos = pos;
+            luz.color = color;
+            luz.direction = Vec3(0, -1, 0),
+            luz.angle = M_PI; 
+            luz.intensity = intensity;
+            luz.tipo = Pontual;
+
+            return luz;
         }
 
-        // Calcula o fator de atenuação do spot
-        float spot_factor(const Vec3& point) const {
-            if(angle >= M_PI) return 1.0f; // Luz direcional
-            
-            Vec3 light_vec = (point - pos).normalize();
-            float cos_theta = direction.dot(light_vec);
-            float cos_phi = cos(angle/2.0);
-            
-            if(cos_theta < cos_phi) return 0.0f;
-            
-            // Atenuação suave
-            return powf(cos_theta, exponent);
+        static Light luz_spot(Vec3 pos, Vec3 dr, double angle, Vec3 color, float intensity) {
+            Light luz = Light();
+            luz.pos = pos;
+            luz.color = color;
+            luz.direction = dr.normalized();
+            luz.angle = angle; 
+            luz.intensity = intensity;
+            luz.tipo = Spot;
+            return luz;
         }
+
+        static Light luz_direcional(Vec3 dr, Vec3 color, float intensity) {
+            Light luz = Light();
+            luz.pos = Vec3(0,0,0);
+            luz.color = color;
+            luz.direction = dr.normalized(),
+            luz.angle = 0; 
+            luz.intensity = intensity;
+            luz.tipo = Direcional;
+            return luz;
+        }
+
+        // // Calcula o fator de atenuação do spot
+        // float spot_factor(const Vec3& point) const {
+        //     if(angle >= M_PI) return 1.0f; // Luz pontual
+            
+        //     Vec3 light_vec = (point - pos).normalized();
+        //     float cos_theta = direction.dot(light_vec);
+        //     float cos_phi = cos(angle/2.0);
+            
+        //     if(cos_theta < cos_phi) return 0.0f;
+            
+        //     // Atenuação suave
+        //     return cos_theta;
+        // }
 };
 
 #endif

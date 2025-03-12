@@ -10,8 +10,10 @@ class Cilinder : public Shape {
         Vec3 direction;
         double radius;
         double height;
-        Cilinder (): center(Vec3(0.0, 0.0, 0.0)), direction(Vec3(0.0, 1.0, 0.0)), radius(1.0), height(1.0), Shape() {}
-        Cilinder (Vec3 center, Vec3 direction, double radius, double height, Material mat): center(center), direction(direction.normalize()), radius(radius), height(height), Shape(mat) {}
+        bool tem_tampa;
+        bool tem_base;
+        Cilinder (): Shape(), center(Vec3(0.0, 0.0, 0.0)), direction(Vec3(0.0, 1.0, 0.0)), radius(1.0), height(1.0), tem_tampa(true), tem_base(true) {}
+        Cilinder (Vec3 center, Vec3 direction, double radius, double height, Material mat, bool tem_base, bool tem_tampa): Shape(mat), center(center), direction(direction.normalized()), radius(radius), height(height), tem_tampa(tem_tampa), tem_base(tem_base) {}
         
         inline Vec3 get_normal(Vec3 p) const override { 
             Vec3 top_center = center + direction * height;
@@ -21,8 +23,15 @@ class Cilinder : public Shape {
                 return direction; // circulo topo
             } else {
                 Vec3 projection = center + direction * ((p - center).dot(direction));
-                return (p - projection).normalize(); // casca do cilindro
+                return (p - projection).normalized(); // casca do cilindro
             }
+        }
+
+        void transform(Matriz4x4 m) override {
+            Vec3 ctopo = center + direction * height;
+            center = m * center;
+            ctopo = m * ctopo;
+            direction = (ctopo - center).normalized();
         }
         
         double intersects(Ray r) const override {
@@ -52,17 +61,21 @@ class Cilinder : public Shape {
             }
 
             // verifica interseção com o circulo base
-            double t_bottom = (center - r.origin).dot(direction) / r.dr.dot(direction);
-            Vec3 p_bottom = r.at(t_bottom);
-            if (t_bottom > 0 && (p_bottom - center).magnitude() <= radius) {
-                t_min = std::min(t_min, t_bottom);
+            if (tem_base) {
+                double t_bottom = (center - r.origin).dot(direction) / r.dr.dot(direction);
+                Vec3 p_bottom = r.at(t_bottom);
+                if (t_bottom > 0 && (p_bottom - center).magnitude() <= radius) {
+                    t_min = std::min(t_min, t_bottom);
+                }
             }
 
             // verifica interseção com o circulo topo
-            double t_top = (top_center - r.origin).dot(direction) / r.dr.dot(direction);
-            Vec3 p_top = r.at(t_top);
-            if (t_top > 0 && (p_top - top_center).magnitude() <= radius) {
-                t_min = std::min(t_min, t_top);
+            if (tem_tampa) {
+                double t_top = (top_center - r.origin).dot(direction) / r.dr.dot(direction);
+                Vec3 p_top = r.at(t_top);
+                if (t_top > 0 && (p_top - top_center).magnitude() <= radius) {
+                    t_min = std::min(t_min, t_top);
+                }
             }
 
             return t_min == INFINITY ? -INFINITY : t_min;

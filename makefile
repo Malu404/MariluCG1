@@ -18,8 +18,6 @@ TARGET = cg1
 # Default target
 all: $(TARGET)
 
-run: $(TARGET)
-    ./$(TARGET)
 
 # Build the target
 $(TARGET): $(SRCS)
