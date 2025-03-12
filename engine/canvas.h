@@ -8,6 +8,7 @@
 #include "ray.h"
 #include "light.h"
 #include "shapes/shape.h"
+#include "intersection.hpp"
 
 
 //mudar de Canvas pra canvas
@@ -27,23 +28,51 @@ class Canvas {
         }
 
         // tupla TEM INTERSEÇÃO, OBJETO, PONTO DE INTERSEÇÃO
-        tuple<bool, Shape*, Vec3> send_ray(int x, int y, Scene scene) {
-            Vec3 dr;
-            dr.x = janela.X_min + janela.dx/2 + janela.dx * x;
-            dr.y = janela.Y_max - janela.dy/2 - janela.dy * y;
-            dr.z = janela.d;
+        // tuple<bool, Shape*, Vec3> send_ray(Scene scene, int x, int y) {
+        //     Vec3 dr;
+        //     dr.x = janela.X_min + janela.dx/2 + janela.dx * x;
+        //     dr.y = janela.Y_max - janela.dy/2 - janela.dy * y;
+        //     dr.z = janela.d;
             
-            // vetor direção pro quadrado do frame
+        //     // vetor direção pro quadrado do frame
+        //     Vec3 dr_transformed = dr.x * eixo_x + dr.y * eixo_y + dr.z * eixo_z;
+        //     Vec3 dr_normalized = dr_transformed.normalized();
+        //     Ray r = Ray(pos, dr_normalized); // nosso raio
+
+        //     // pega o objeto mais próximo na cena
+        //     auto [closest_shape, t] = scene.get_closest_object(r);
+        //     if (t > 0.0) {
+        //         return make_tuple(true, closest_shape, r.at(t));
+        //     }
+        //     return make_tuple(false, closest_shape, r.at(t));
+        // }
+
+
+        Intersection Canvas::send_ray(Scene scene, int x, int y) {
+            Vec3 dr;
+            dr.x = janela.X_min + janela.dx / 2 + janela.dx * x;
+            dr.y = janela.Y_max - janela.dy / 2 - janela.dy * y;
+            dr.z = janela.d;
+        
+            // Vetor direção normalizado
             Vec3 dr_transformed = dr.x * eixo_x + dr.y * eixo_y + dr.z * eixo_z;
             Vec3 dr_normalized = dr_transformed.normalized();
-            Ray r = Ray(pos, dr_normalized); // nosso raio
-
-            // pega o objeto mais próximo na cena
+            Ray r = Ray(pos, dr_normalized); // Nosso raio
+        
+            // Pega o objeto mais próximo na cena
             auto [closest_shape, t] = scene.get_closest_object(r);
+        
             if (t > 0.0) {
-                return make_tuple(true, closest_shape, r.at(t));
+                Vec3 p_intersect = r.at(t); // Ponto de interseção
+                Vec3 normal = closest_shape->get_normal(p_intersect); // Normal no ponto de interseção
+                Vec3 color = closest_shape->mat.k_ambient; // Cor ambiente (ou defina uma cor padrão)
+        
+                // Retorna um objeto Intersection
+                return Intersection(t, p_intersect, normal, color, closest_shape);
+            } else {
+                // Se não houve interseção, retorna um Intersection inválido
+                return Intersection();
             }
-            return make_tuple(false, closest_shape, r.at(t));
         }
 
         void look_at(Vec3 p, Vec3 up) {
@@ -168,6 +197,16 @@ class Canvas {
         inline void draw_pixel(SDL_Renderer* renderer, int x, int y, Vec3 color) {
             SDL_SetRenderDrawColor(renderer, color.x, color.y, color.z, 1.0);
             SDL_RenderDrawPoint(renderer, x, y);
+        }
+
+         void aumentar_d() {
+            janela.d -= 0.1;
+            
+        }
+    
+        void diminuir_d() {
+            janela.d += 0.1;
+           
         }
 
         class Janela {

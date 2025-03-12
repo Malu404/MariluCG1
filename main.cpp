@@ -10,6 +10,7 @@
 #include <SDL.h>
 #include <SDL_image.h>
 
+#include "engine/pick.hpp"
 #include "utils/vec3.h"
 #include "engine/canvas.h"
 //#include "engine/camera.h"
@@ -237,16 +238,82 @@ int main() {
                         canvas.pos.y += 1; break;
                     case SDLK_LSHIFT:
                         canvas.pos.y -= 1; break;
+                    case SDLK_PLUS:  // Tecla +
+                    case SDLK_KP_PLUS:  // Tecla + do teclado numérico
+                        canvas.aumentar_d();
+                        break;
+
+                    case SDLK_MINUS:  // Tecla -
+                    case SDLK_KP_MINUS:  // Tecla - do teclado numérico
+                        canvas.diminuir_d();
+                        break;
                 }
             } else if (event.type == SDL_MOUSEBUTTONDOWN) {
                 // CLICK DO BOTÃO DO MEIO DO MOUSE = LOOK_AT
                 if (event.button.button == SDL_BUTTON_MIDDLE) {
                     // picking
-                    auto [teve_intersecao, objeto, ponto_intersecao] = canvas.send_ray(event.button.x, event.button.y, scene);
+                    auto [teve_intersecao, objeto, ponto_intersecao] = canvas.send_ray(scene, event.button.x, event.button.y);
                     // look_at
                     if (teve_intersecao) {
                         canvas.look_at(ponto_intersecao, canvas.pos + Vec3(0,1,0));
                     }
+
+                } else if (event.button.button == SDL_BUTTON_RIGHT) {
+                    // Usa a função pick para detectar colisão
+                    Object* selectedObject = pick(canvas, scene, event.button.x, event.button.y);
+
+                    if (selectedObject != nullptr) {
+                        std::cout << "Objeto selecionado!" << std::endl;
+
+                        // menu de transformações
+                        std::cout << "Escolha a transformação" << std::endl;
+                        std::cout << "1. Translação" << std::endl;
+                        std::cout << "2. Rotação" << std::endl;
+                        std::cout << "3. Cancelar" << std::endl;
+
+                        int choice;
+                        std::cin >> choice;
+                        std::cin.clear(); // Corrige erro de leitura
+                        std::cin.ignore(std::numeric_limits<std::streamsize>::max(), '\n');
+
+                        switch (choice) {
+                            case 1: { // Translação
+                                double tx, ty, tz;
+                                std::cout << "Digite os valores de translação (x y z): ";
+                                std::cin >> tx >> ty >> tz;
+                                selectedObject->translate(Vec3(tx, ty, tz));
+                                std::cout << "Translação aplicada!" << std::endl;
+                                break;
+                            }
+
+                            case 2: { // Rotação
+                                double angle;
+                                double ax, ay, az;
+                                double bx, by, bz;
+                                std::cout << "Digite o eixo de rotação (x y z): ";
+                                std::cin >> ax >> ay >> az; 
+                                std::cout << "Digite o ângulo de rotação (em graus): ";
+                                std::cin >> angle;
+                                std::cout << "Digite o eixo por onde ele passa (em graus): ";
+                                std::cin >>  bx >> by >> bz;
+                                double angleRadians = Matriz4x4::degreesToRadians(angle);
+                                Matriz4x4 m = Matriz4x4::rotation_around_axis(Vec3(ax,ay,az), angleRadians, Vec3(bx,by,bz));
+                                selectedObject->transform(m);
+                                std::cout << "Rotação aplicada" << std::endl;
+                                break;
+                            }
+                            case 3: // Cancelar
+                                std::cout << "cancelada." << std::endl;
+                                break;
+                            default:
+                                std::cout << "inválida" << std::endl;
+                                break;
+                        }
+
+                    } else {
+                        std::cout << "Objeto não selecionado!" << std::endl;
+                    }
+                    
                 }
             }
         }

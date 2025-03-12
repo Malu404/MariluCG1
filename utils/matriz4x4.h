@@ -1,6 +1,7 @@
 #pragma once
 #include "vec3.h"
 #include <initializer_list>
+#define M_PI 3.14159265358979323846
 
 struct Matriz4x4 {
 public:
@@ -257,7 +258,7 @@ public:
         return translation_matrix(pc.x, pc.y, pc.z) * householder_matrix * translation_matrix(-pc.x, -pc.y, -pc.z);
     }
     
-    private: 
+    
         // Function to convert degrees to radians
         static double degreesToRadians(double degrees) {
             return degrees * (M_PI / 180.0);
